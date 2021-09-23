@@ -5,7 +5,7 @@ springboot-2.2.5+mybatis-plus-3.4+springcloud-Hoxton.SR3  开发者论坛社区�
 
 [演示地址](http://www.makesoft.cn)http://www.makesoft.cn 
 
-
+前端基本完成。后端功能开发中。。。。
 
 Biemo-cloud 3.0 开发中... 
 
@@ -56,6 +56,8 @@ Biemo-cloud v2.0
 <img src="https://img.shields.io/badge/Spring%20Boot-2.2.5-blue.svg" alt="Coverage Status">
 <img src="https://img.shields.io/badge/Mybatis%20Plus-3.4.2-red.svg" alt="Coverage Status">
 
+
+![前端界面](https://images.gitee.com/uploads/images/2021/0923/133602_a0f3ebc3_1997500.png "屏幕截图.png")
 
 
 
