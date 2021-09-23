@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>biemo-system-app</artifactId>
+    <version>3.0.0</version>
+
+    <packaging>jar</packaging>
+
+    <name>biemo-system-app</name>
+    <description>系统管理，包含权限管理，组织架构管理，可同时集成文件，字典，日志管理</description>
+
+    <parent>
+        <groupId>com.biemo.cloud</groupId>
+        <artifactId>biemo-system</artifactId>
+        <version>3.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.biemo.cloud</groupId>
+            <artifactId>biemo-system-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.biemo.cloud</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+
+
+       <!-- <dependency>
+            <groupId>com.biemo.cloud</groupId>
+            <artifactId>biz-support-file</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.biemo.cloud</groupId>
+            <artifactId>biz-support-dict</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.biemo.cloud</groupId>
+            <artifactId>biz-support-log</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.kafka</groupId>
+                    <artifactId>spring-kafka</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
+
+
+        <!--拼音转汉子-->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

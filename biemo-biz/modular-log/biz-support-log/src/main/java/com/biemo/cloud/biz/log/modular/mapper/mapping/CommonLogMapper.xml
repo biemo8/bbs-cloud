@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.biz.log.modular.mapper.CommonLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.biz.log.api.entity.CommonLog">
+        <id column="ID" property="id"/>
+        <result column="APP_CODE" property="appCode"/>
+        <result column="LEVEL" property="level"/>
+        <result column="CLASS_NAME" property="className"/>
+        <result column="METHOD_NAME" property="methodName"/>
+        <result column="IP" property="ip"/>
+        <result column="ACCOUNT_ID" property="accountId"/>
+        <result column="REQUEST_NO" property="requestNo"/>
+        <result column="URL" property="url"/>
+        <result column="REQUEST_DATA" property="requestData"/>
+        <result column="LOG_CONTENT" property="logContent"/>
+        <result column="CREATE_TIMESTAMP" property="createTimestamp"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID AS id, APP_CODE AS appCode, LEVEL AS level, CLASS_NAME AS className, METHOD_NAME AS methodName, IP AS ip, ACCOUNT_ID AS accountId, REQUEST_NO AS requestNo, URL AS url, REQUEST_DATA AS requestData, LOG_CONTENT AS logContent, CREATE_TIMESTAMP AS createTimestamp
+    </sql>
+
+
+    <select id="getCommonLogCount" resultType="java.lang.Long">
+        select ID from log_common_log order by ID desc limit 0,1
+    </select>
+
+    <select id="getCommonLogList" resultType="com.biemo.cloud.biz.log.api.entity.CommonLog">
+        SELECT
+        ID AS id, APP_CODE AS appCode, `LEVEL` AS level, CLASS_NAME AS className, METHOD_NAME AS methodName, IP AS
+        ip, ACCOUNT_ID AS accountId, REQUEST_NO AS requestNo, URL AS url, CREATE_TIMESTAMP AS createTimestamp
+        from log_common_log
+        where id &lt;=
+        (
+        #{gtValue} - #{pageSize} * (#{pageNo}-1)
+        )
+        ORDER BY ID desc LIMIT 0, #{pageSize};
+    </select>
+
+    <select id="getCommonLogListByCondition" resultType="com.biemo.cloud.biz.log.api.entity.CommonLog">
+        SELECT
+        ID AS id, APP_CODE AS appCode, `LEVEL` AS level, CLASS_NAME AS className, METHOD_NAME AS methodName, IP AS
+        ip, ACCOUNT_ID AS accountId, REQUEST_NO AS requestNo, URL AS url, CREATE_TIMESTAMP AS createTimestamp
+        from log_common_log
+        where 1 = 1
+        <if test="appCode != null and appCode != ''">
+            and APP_CODE = #{appCode}
+        </if>
+        <if test="logLevel != null and logLevel != ''">
+            and `LEVEL` = #{logLevel}
+        </if>
+        <if test="requestNo != null and requestNo != ''">
+            and REQUEST_NO = #{requestNo}
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and ( CREATE_TIMESTAMP &gt;= #{beginTime} and CREATE_TIMESTAMP &lt;= #{endTime} )
+        </if>
+        ORDER BY ID desc LIMIT #{limitOffset}, #{pageSize};
+    </select>
+
+    <select id="getCommonLogListPageByCondition" resultType="com.biemo.cloud.biz.log.api.entity.CommonLog">
+        SELECT
+        ID AS id, APP_CODE AS appCode, `LEVEL` AS level, CLASS_NAME AS className, METHOD_NAME AS methodName, IP AS
+        ip, ACCOUNT_ID AS accountId, REQUEST_NO AS requestNo, URL AS url, CREATE_TIMESTAMP AS createTimestamp
+        from log_common_log
+        where 1 = 1
+        <if test="appCode != null and appCode != ''">
+            and APP_CODE = #{appCode}
+        </if>
+        <if test="logLevel != null and logLevel != ''">
+            and `LEVEL` = #{logLevel}
+        </if>
+        <if test="requestNo != null and requestNo != ''">
+            and REQUEST_NO = #{requestNo}
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and ( CREATE_TIMESTAMP &gt;= #{beginTime} and CREATE_TIMESTAMP &lt;= #{endTime} )
+        </if>
+        ORDER BY ID desc
+    </select>
+
+</mapper>

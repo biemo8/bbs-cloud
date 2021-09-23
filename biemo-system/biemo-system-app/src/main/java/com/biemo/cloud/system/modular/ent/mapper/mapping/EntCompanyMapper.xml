@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.ent.mapper.EntCompanyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.ent.entity.EntCompany">
+        <id column="company_id" property="companyId"/>
+        <result column="name" property="name"/>
+        <result column="short_name" property="shortName"/>
+        <result column="cp_code" property="cpCode"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_ids" property="parentIds"/>
+        <result column="url" property="url"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        company_id AS "companyId", name AS "name", short_name AS "shortName", cp_code AS "cpCode", parent_id AS "parentId", parent_ids AS "parentIds", url AS "url", order_no AS "orderNo", description AS "description", status AS "status", create_user AS "createUser", create_time AS "createTime", update_user AS "updateUser", update_time AS "updateTime"
+    </sql>
+
+    <sql id="Page_Column_List">
+        company_id AS "companyId", name AS "name", short_name AS "shortName", cp_code AS "cpCode", parent_id AS "parentId", url AS "url", description AS "description", status AS "status"
+    </sql>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.ent.model.result.EntCompanyResult"
+            parameterType="com.biemo.cloud.system.modular.ent.model.params.EntCompanyParam">
+        select
+        <include refid="Page_Column_List"/>
+        from biemo_ent_company where 1 = 1
+        <if test="paramCondition.name != null and paramCondition.name != ''">
+            and name like concat('%',#{paramCondition.name},'%')
+        </if>
+        <if test="paramCondition.cpCode != null and paramCondition.cpCode != ''">
+            and cpCode = #{paramCondition.cpCode}
+        </if>
+        order by order_no asc,status asc,create_time asc
+    </select>
+    <select id="getCompAppIds" resultType="java.lang.Long">
+        SELECT app_id FROM biemo_ent_comp_app WHERE company_id = #{companyId}
+    </select>
+
+</mapper>

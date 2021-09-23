@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysAppMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysApp">
+        <id column="app_id" property="appId" />
+        <result column="app_code" property="appCode" />
+        <result column="app_name" property="appName" />
+        <result column="app_icon" property="appIcon" />
+        <result column="app_jump_address" property="appJumpAddress" />
+        <result column="app_type" property="appType" />
+        <result column="description" property="description" />
+        <result column="order_no" property="orderNo" />
+        <result column="status" property="status" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        app_id AS "appId", app_code AS "appCode", app_name AS "appName", app_icon AS "appIcon",app_jump_address as "appJumpAddress", app_type AS "appType", description AS "description", order_no AS "orderNo", status AS "status", create_user AS "createUser", create_time AS "createTime", update_user AS "updateUser", update_time AS "updateTime", del_flag AS "delFlag"
+    </sql>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysAppParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_app where 1 = 1
+        <if test="appName != null and appName != ''">
+            and app_name like concat('%',#{appName},'%')
+        </if>
+        order by status asc,order_no asc,create_time desc
+    </select>
+    <select id="getAppSelectByCurrentUser"
+            resultType="com.biemo.cloud.system.modular.sys.model.params.SysAppParam">
+                SELECT
+            sa.app_id AS appId,
+            sa.app_code AS appCode,
+            sa.app_name AS appName,
+            sa.app_jump_address AS appJumpAddress,
+            sa.app_type AS appType,
+            sd.dict_name AS appTypeName
+        FROM
+            biemo_ent_user_account ua
+            LEFT JOIN biemo_ent_comp_app ca ON ua.company_id = ca.company_id
+            LEFT JOIN biemo_sys_app sa ON sa.app_id = ca.app_id
+            INNER JOIN biemo_sys_dict sd ON sd.dict_id = sa.app_type
+        WHERE
+            sa.`status` = 1
+            AND ua.account_id = #{accountId}
+            ORDER BY sa.order_no ASC,create_user DESC
+    </select>
+
+
+</mapper>

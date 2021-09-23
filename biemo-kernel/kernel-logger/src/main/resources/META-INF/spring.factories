@@ -1,0 +1,3 @@
+# AutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.biemo.cloud.kernel.logger.config.LoggerAutoConfiguration

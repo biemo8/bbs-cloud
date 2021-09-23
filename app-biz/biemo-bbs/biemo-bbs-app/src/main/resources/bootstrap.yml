@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: biemo-bbs-app
+  profiles:
+    active: @spring.active@
+  cloud:
+    config:
+      profile: @spring.active@
+      label: master
+
+---
+
+spring:
+  profiles: local
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8002
+
+---
+
+spring:
+  profiles: dev
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8002
+
+---
+
+spring:
+  profiles: test
+  cloud:
+    config:
+      enabled: true
+      uri: http://192.168.3.177:8002
+
+---
+
+spring:
+  profiles: produce
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8002

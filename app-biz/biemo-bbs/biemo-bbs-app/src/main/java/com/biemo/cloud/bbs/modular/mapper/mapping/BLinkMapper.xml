@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.bbs.modular.mapper.BLinkMapper">
+
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.BLink" id="BLinkResult">
+        <result property="id"    column="id"    />
+        <result property="url"    column="url"    />
+        <result property="title"    column="title"    />
+        <result property="summary"    column="summary"    />
+        <result property="logo"    column="logo"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+</mapper>

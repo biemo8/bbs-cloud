@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysRole">
+        <id column="role_id" property="roleId"/>
+        <result column="role_code" property="roleCode"/>
+        <result column="role_name" property="roleName"/>
+        <result column="role_desc" property="roleDesc"/>
+        <result column="app_id" property="appId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        role_id AS "roleId", role_code AS "roleCode", role_name AS "roleName", role_desc AS "roleDesc", app_id AS "appId", order_no AS "orderNo", status AS "status", create_time AS "createTime", create_user AS "createUser", update_time AS "updateTime", update_user AS "updateUser", del_flag AS "delFlag"
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Query_Column_List">
+        role_id AS "roleId",
+        role_code AS "roleCode",
+        role_name AS "roleName",
+        role_desc AS "roleDesc",
+        app_id AS "appId",
+        order_no AS "orderNo",
+        create_time AS "createTime",
+        create_user AS "createUser",
+        update_time AS "updateTime",
+        update_user AS "updateUser",
+        status AS "status",
+        del_flag AS "delFlag"
+    </sql>
+
+    <sql id="Base_Table_List">
+		biemo_sys_role role
+		LEFT JOIN biemo_sys_app app on app.APP_ID = role.APP_ID
+	</sql>
+
+    <sql id="Base_Where_List">
+        1 = 1
+        <if test="roleId != null and roleId !=''">
+            and role.ROLE_ID = #{roleId}
+        </if>
+        <if test="roleName != null and roleName !=''">
+            and role.ROLE_NAME LIKE concat('%', #{roleName}, '%')
+        </if>
+        <if test="roleCode != null and roleCode !=''">
+            and role.ROLE_CODE = #{roleCode}
+        </if>
+        <if test="appId != null and appId !=''">
+            and role.APP_ID = #{appId}
+        </if>
+        <if test="delFlag != null and delFlag !=''">
+            and role.DEL_FLAG = #{delFlag}
+        </if>
+    </sql>
+
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysRoleResult"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysRoleParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_role where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysRoleParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_role where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysRoleResult"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysRoleParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_role where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysRoleParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_role where 1 = 1
+    </select>
+
+
+    <select id="findRolePage" resultType="com.biemo.cloud.system.modular.sys.model.RoleParam">
+        SELECT
+        role.ROLE_ID AS roleId,
+        role.ROLE_CODE AS roleCode,
+        role.ROLE_NAME AS roleName,
+        role.ROLE_DESC AS roleDesc,
+        role.APP_ID AS appId,
+        app.APP_NAME AS appName,
+        role.CREATE_TIME AS createTime,
+        role.CREATE_USER AS createUser,
+        role.UPDATE_TIME AS updateTime,
+        role.UPDATE_USER AS updateUser,
+        role.STATUS AS status,
+        role.DEL_FLAG AS delFlag
+        FROM
+        biemo_sys_role role
+        LEFT JOIN biemo_sys_app app on app.APP_ID = role.APP_ID
+        WHERE
+        1 = 1
+        <if test="param.roleId != null and param.roleId !=''">
+            and role.ROLE_ID = #{param.roleId}
+        </if>
+        <if test="param.roleName != null and param.roleName !=''">
+            and role.ROLE_NAME LIKE concat('%', #{param.roleName}, '%')
+        </if>
+        <if test="param.roleCode != null and param.roleCode !=''">
+            and role.ROLE_CODE = #{param.roleCode}
+        </if>
+        <if test="param.appId != null and param.appId !=''">
+            and role.APP_ID = #{param.appId}
+        </if>
+        <if test="param.delFlag != null and param.delFlag !=''">
+            and role.DEL_FLAG = #{param.delFlag}
+        </if>
+        ORDER BY app.ORDER_NO ASC, role.ORDER_NO ASC, role.ROLE_NAME DESC
+    </select>
+
+    <select id="findRoleList" resultType="com.biemo.cloud.system.modular.sys.model.RoleParam">
+        SELECT
+        role.ROLE_ID AS roleId,
+        role.ROLE_CODE AS roleCode,
+        role.ROLE_NAME AS roleName,
+        role.ROLE_DESC AS roleDesc,
+        role.APP_ID AS appId,
+        app.APP_NAME AS appName,
+        role.CREATE_TIME AS createTime,
+        role.CREATE_USER AS createUser,
+        role.UPDATE_TIME AS updateTime,
+        role.UPDATE_USER AS updateUser,
+        role.STATUS AS status,
+        role.DEL_FLAG AS delFlag
+        FROM
+        <include refid="Base_Table_List"/>
+        WHERE
+        <include refid="Base_Where_List"/>
+    </select>
+
+    <select id="findRoleDetail" resultType="com.biemo.cloud.system.modular.sys.model.RoleParam">
+        SELECT
+        role.role_id AS "roleId",
+        role.role_code AS "roleCode",
+        role.role_name AS "roleName",
+        role.role_desc AS "roleDesc",
+        role.app_id AS "appId",
+        app.app_name AS "appName",
+        role.order_no AS "orderNo",
+        role.status AS "status",
+        role.del_flag AS "delFlag"
+        FROM
+        biemo_sys_role role
+        LEFT JOIN biemo_sys_app app on app.APP_ID = role.APP_ID
+        WHERE
+        1 = 1
+        <if test="roleId != null and roleId !=''">
+            and role.ROLE_ID = #{roleId}
+        </if>
+        <if test="roleName != null and roleName !=''">
+            and role.ROLE_NAME = #{roleName}
+        </if>
+        <if test="roleCode != null and roleCode !=''">
+            and role.ROLE_CODE = #{roleCode}
+        </if>
+        <if test="appId != null and appId !=''">
+            and role.APP_ID = #{appId}
+        </if>
+        <if test="delFlag != null and delFlag !=''">
+            and role.DEL_FLAG = #{delFlag}
+        </if>
+    </select>
+
+    <select id="findRoleInfoList" resultType="map">
+        SELECT
+        app.APP_NAME as appName,
+        role.ROLE_ID as roleId,
+        role.ROLE_NAME as roleName,
+        role.ROLE_DESC as roleDesc
+        FROM
+        biemo_sys_role role
+        LEFT JOIN biemo_sys_app app ON role.APP_ID = app.APP_ID
+        WHERE
+        1 = 1
+        <if test="roleIds != null and roleIds.size > 0">
+            AND ROLE_ID IN
+            <foreach collection="roleIds" open="(" close=")" separator="," item="type">
+                #{type}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findRoleListByAppId" resultType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        biemo_sys_role role
+        LEFT JOIN biemo_sys_app app ON role.APP_ID = app.APP_ID
+        WHERE
+        1 = 1
+        <if test="appId != null and appId !=''">
+            and role.APP_ID = #{appId}
+        </if>
+        <if test="roleIds != null and roleIds.size > 0">
+            AND ROLE_ID IN
+            <foreach collection="roleIds" open="(" close=")" separator="," item="type">
+                #{type}
+            </foreach>
+        </if>
+        and role.DEL_FLAG = 'N'
+    </select>
+
+    <select id="findRoleListByType" resultType="com.biemo.cloud.system.modular.sys.model.RoleParam">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        biemo_sys_role role
+        LEFT JOIN biemo_sys_app app ON role.APP_ID = app.APP_ID
+        WHERE
+        1 = 1
+        <if test="appId != null and appId !=''">
+            and role.APP_ID = #{appId}
+        </if>
+        and role.DEL_FLAG = 'N'
+    </select>
+
+    <select id="getRoleById" resultType="map">
+
+        SELECT
+        role.ROLE_CODE AS roleId,
+        role.ROLE_NAME AS roleName
+        FROM
+        biemo_sys_role role
+        LEFT JOIN biemo_sys_user_role ur ON ur.ROLE_ID = role.ROLE_ID
+        WHERE
+        1 = 1
+        <if test="accountId !='' and accountId != null">
+            AND ur.ACCOUNT_ID = #{accountId}
+        </if>
+        AND role.DEL_FLAG = "N"
+        GROUP BY
+        role.ROLE_CODE
+
+    </select>
+
+    <select id="getUsersByRoleId" resultType="com.biemo.cloud.system.api.model.UserInfo">
+        SELECT
+        ua.account_id as id,
+        ua.account as account,
+        u.name as name
+        FROM
+        biemo_ent_user_account ua
+        right join biemo_sys_user_role ur on ua.account_id = ur.account_id
+        inner JOIN biemo_ent_user u ON u.user_id = ua.user_id
+        where 1 = 1
+        <if test="roleId !='' and roleId != null">
+            AND ur.role_id = #{roleId}
+        </if>
+    </select>
+
+    <select id="getUsersByRoleIdByPage" resultType="com.biemo.cloud.system.api.model.UserInfo">
+        SELECT
+        ua.account_id as id,
+        ua.account as account,
+        u.name as name
+        FROM
+        biemo_ent_user_account ua
+        right join biemo_sys_user_role ur on ua.account_id = ur.account_id
+        inner JOIN biemo_ent_user u ON u.user_id = ua.user_id
+        where 1 = 1
+        <if test="roleId !='' and roleId != null">
+            AND ur.role_id = #{roleId}
+        </if>
+    </select>
+
+    <select id="getUsersByUserIdsOrRoleIds" resultType="com.biemo.cloud.system.api.model.UserInfo">
+        SELECT
+        ua.account_id as id,
+        ua.account as account,
+        u.name as name
+        FROM
+        biemo_ent_user_account ua
+        right join biemo_sys_user_role ur on ua.account_id = ur.account_id
+        inner JOIN biemo_ent_user u ON u.user_id = ua.user_id
+        where 1 = 1
+        <if test="accountIds != null and accountIds.size > 0">
+            or ua.account_id IN
+            <foreach collection="accountIds" open="(" close=")" separator="," item="accountId">
+                #{accountId}
+            </foreach>
+        </if>
+        <if test="roleIds != null and roleIds.size > 0">
+            or ur.role_id IN
+            <foreach collection="roleIds" open="(" close=")" separator="," item="roleId">
+                #{roleId}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.auth.modular.sso.mapper.AuthCertAccountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.auth.modular.sso.entity.AuthCertAccount">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="second_check" property="secondCheck"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id AS "id", account AS "account", second_check AS "secondCheck", create_time AS "createTime", update_time AS "updateTime", create_user AS "createUser", update_user AS "updateUser"
+    </sql>
+
+    <select id="customList" resultType="com.biemo.cloud.auth.modular.sso.model.result.AuthCertAccountResult" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthCertAccountParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_cert_account where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthCertAccountParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_cert_account where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.auth.modular.sso.model.result.AuthCertAccountResult" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthCertAccountParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_cert_account where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthCertAccountParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_cert_account where 1 = 1
+    </select>
+
+</mapper>

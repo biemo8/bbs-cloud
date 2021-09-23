@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysMenu">
+        <id column="menu_id" property="menuId" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="pid" property="pid" />
+        <result column="icon" property="icon" />
+        <result column="app_id" property="appId" />
+        <result column="res_code" property="resCode" />
+        <result column="menu_tips" property="menuTips" />
+        <result column="hidden_flag" property="hiddenFlag" />
+        <result column="order_no" property="orderNo" />
+        <result column="url" property="url" />
+        <result column="status" property="status" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        menu_id AS "menuId", name AS "name", code AS "code", pid AS "pid", icon AS "icon", app_id AS "appId", res_code AS "resCode", menu_tips AS "menuTips", hidden_flag AS "hiddenFlag", order_no AS "orderNo", url AS "url", status AS "status", create_user AS "createUser", create_time AS "createTime", update_user AS "updateUser", update_time AS "updateTime"
+    </sql>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.MenuCondition">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_menu
+        where 1 = 1
+        <if test="paramCondition.menuName != null and paramCondition.menuName != ''">
+            and name like concat('%',#{paramCondition.menuName},'%')
+        </if>
+        <if test="paramCondition.pName != null and paramCondition.pName != ''">
+            and menu_id
+            in
+            (select son.menu_id from biemo_sys_menu son
+            inner join biemo_sys_menu parent on son.pid = parent.menu_id
+            where parent.name like concat('%',#{paramCondition.pName},'%'))
+        </if>
+        <if test="paramCondition.appId != null and paramCondition.appId != ''">
+            and app_id = #{paramCondition.appId}
+        </if>
+        order by app_id desc,pid desc,name desc
+    </select>
+
+    <select id="getSameMenu" resultType="com.biemo.cloud.system.modular.sys.entity.SysMenu">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from biemo_sys_menu
+        WHERE
+        1=1
+        AND ((APP_ID = #{appId} AND NAME = #{name}) OR (APP_ID = #{appId} AND CODE = #{code}))
+        AND (MENU_ID != #{menuId})
+    </select>
+
+    <select id="getSameMenuWhenAdd" resultType="com.biemo.cloud.system.modular.sys.entity.SysMenu">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from biemo_sys_menu
+        WHERE
+        1=1
+        AND (
+        (APP_ID = #{appId} AND NAME = #{name})
+        OR
+        (APP_ID = #{appId} AND CODE = #{code})
+        )
+    </select>
+    <select id="getMenuResCodesByAppId" resultType="java.lang.String">
+        select res_code from biemo_sys_menu where app_id = #{appId}
+    </select>
+
+</mapper>

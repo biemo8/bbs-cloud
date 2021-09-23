@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.auth.modular.sso.mapper.AuthLoginLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.auth.modular.sso.entity.AuthLoginLog">
+        <id column="login_log_id" property="loginLogId"/>
+        <result column="account" property="account"/>
+        <result column="name" property="name"/>
+        <result column="company_id" property="companyId"/>
+        <result column="client_id" property="clientId"/>
+        <result column="operation" property="operation"/>
+        <result column="ip_address" property="ipAddress"/>
+        <result column="local_address" property="localAddress"/>
+        <result column="login_time" property="loginTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        login_log_id AS "loginLogId", account AS "account", name AS "name", company_id AS "companyId", client_id AS "clientId", operation AS "operation", ip_address AS "ipAddress", local_address AS "localAddress", login_time AS "loginTime"
+    </sql>
+
+    <select id="customList" resultType="com.biemo.cloud.auth.modular.sso.model.result.AuthLoginLogResult" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthLoginLogParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_login_log where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthLoginLogParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_login_log where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.auth.modular.sso.model.result.AuthLoginLogResult" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthLoginLogParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_login_log where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthLoginLogParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_login_log where 1 = 1
+    </select>
+
+    <select id="pageList" resultType="java.util.Map">
+        SELECT
+        ll.login_log_id AS loginLogId,
+        ll.account AS account,
+        ll.`name` AS `name`,
+        ll.company_id AS companyId,
+        ll.client_id AS clientId,
+        c.`name` AS clientName,
+        ll.operation AS operation,
+        ll.ip_address as ipAddress,
+        ll.local_address AS localAddress,
+        ll.login_time AS loginTime
+        FROM
+        biemo_auth_login_log ll
+        LEFT JOIN biemo_auth_client c ON ll.client_id = c.client_id
+        WHERE
+        1 = 1
+        <if test="account != null and account != ''">
+            and ll.account like CONCAT('%',#{account},'%')
+        </if>
+        ORDER BY
+        ll.login_time DESC
+
+    </select>
+
+    <select id="detail" resultType="com.biemo.cloud.auth.modular.sso.model.result.AuthLoginLogResult">
+        SELECT
+        ll.login_log_id AS loginLogId,
+        ll.account AS account,
+        ll.`name` AS `name`,
+        ll.company_id AS companyId,
+        ll.client_id AS clientId,
+        c.`name` AS clientName,
+        ll.operation AS operation,
+        ll.ip_address as ipAddress,
+        ll.local_address AS localAddress,
+        ll.login_time AS loginTime
+        FROM
+        biemo_auth_login_log ll
+        LEFT JOIN biemo_auth_client c ON ll.client_id = c.client_id
+        WHERE
+        ll.login_log_id = #{loginLogId}
+    </select>
+
+</mapper>

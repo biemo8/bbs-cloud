@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.biemo.cloud</groupId>
+    <artifactId>biemo-system</artifactId>
+    <version>3.0.0</version>
+
+    <packaging>pom</packaging>
+
+    <name>biemo-system</name>
+    <description>系统管理，包含权限管理，组织架构管理，可同时集成文件，字典，日志管理</description>
+
+    <parent>
+        <groupId>com.biemo.cloud</groupId>
+        <artifactId>biemo-cloud</artifactId>
+        <version>3.0.0</version>
+    </parent>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <kernel.version>3.0.0</kernel.version>
+    </properties>
+
+    <modules>
+        <module>biemo-system-api</module>
+        <module>biemo-system-app</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>kernel-core</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>kernel-jwt</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>kernel-logger</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>kernel-scanner</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>kernel-validator</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>kernel-model</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>biz-support-dict</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>biz-support-file</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.biemo.cloud</groupId>
+                <artifactId>biz-support-file-api</artifactId>
+                <version>${kernel.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.SR3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+
+</project>

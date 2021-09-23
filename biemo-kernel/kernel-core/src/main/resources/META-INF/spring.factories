@@ -1,0 +1,10 @@
+# AutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.biemo.cloud.core.config.AopAutoConfiguration,\
+com.biemo.cloud.core.config.RedisAutoConfiguration,\
+com.biemo.cloud.core.config.FastjsonAutoConfiguration,\
+com.biemo.cloud.core.config.MybatisDataSourceAutoConfiguration,\
+com.biemo.cloud.core.config.PropertiesAutoConfiguration,\
+com.biemo.cloud.core.config.UtilAutoConfiguration,\
+com.biemo.cloud.core.config.DbInitializerAutoConfiguration,\
+com.biemo.cloud.core.config.MybatisPluginAutoConfiguration

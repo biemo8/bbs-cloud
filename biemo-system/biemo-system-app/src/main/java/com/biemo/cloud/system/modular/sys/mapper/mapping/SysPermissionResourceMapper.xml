@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysPermissionResourceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysPermissionResource">
+        <id column="permission_resource_id" property="permissionResourceId" />
+        <result column="permission_id" property="permissionId" />
+        <result column="resource_id" property="resourceId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        permission_resource_id AS "permissionResourceId", permission_id AS "permissionId", resource_id AS "resourceId"
+    </sql>
+
+    <sql id="Base_Select_List">
+        n.resource_id AS resourceId,
+        p.`name` AS name,
+        p.app_code AS appCode,
+        p.class_name AS className,
+        p.method_name AS methodName,
+        p.modular_name AS modularName
+    </sql>
+
+    <sql id="Base_Table_List">
+        biemo_sys_permission_resource n
+        INNER JOIN biemo_sys_resource p ON n.resource_id = p.resource_id
+    </sql>
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysPermissionResourceResult" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysPermissionResourceParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_permission_resource where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysPermissionResourceParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_permission_resource where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysPermissionResourceResult" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysPermissionResourceParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_permission_resource where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysPermissionResourceParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_permission_resource where 1 = 1
+    </select>
+
+
+    <!-- 查询资源绑定的权限列表 -->
+    <select id="selectResourceList" resultType="map" parameterType="map">
+        SELECT
+        <include refid="Base_Select_List"/>
+        FROM
+        <include refid="Base_Table_List"/>
+        WHERE
+        1 = 1
+        AND n.permission_id = #{permissionId}
+    </select>
+
+</mapper>

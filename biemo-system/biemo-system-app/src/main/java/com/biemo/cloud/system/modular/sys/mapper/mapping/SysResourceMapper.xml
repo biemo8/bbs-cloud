@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysResourceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysResource">
+        <id column="resource_id" property="resourceId" />
+        <result column="app_code" property="appCode" />
+        <result column="class_name" property="className" />
+        <result column="method_name" property="methodName" />
+        <result column="modular_code" property="modularCode" />
+        <result column="modular_name" property="modularName" />
+        <result column="code" property="code" />
+        <result column="name" property="name" />
+        <result column="ip_address" property="ipAddress" />
+        <result column="url" property="url" />
+        <result column="http_method" property="httpMethod" />
+        <result column="menu_flag" property="menuFlag" />
+        <result column="required_login_flag" property="requiredLoginFlag" />
+        <result column="required_permission_flag" property="requiredPermissionFlag" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        resource_id AS "resourceId", app_code AS "appCode", class_name AS "className", method_name AS "methodName", modular_code AS "modularCode", modular_name AS "modularName", code AS "code", name AS "name", ip_address AS "ipAddress", url AS "url", http_method AS "httpMethod", menu_flag AS "menuFlag", required_login_flag AS "requiredLoginFlag", required_permission_flag AS "requiredPermissionFlag", create_user AS "createUser", create_time AS "createTime", update_user AS "updateUser", update_time AS "updateTime"
+    </sql>
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysResourceResult" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysResourceParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_resource where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysResourceParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_resource where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysResourceResult" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysResourceParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_resource where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysResourceParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_resource where 1 = 1
+    </select>
+
+    <select id="getResourceList" resultType="java.util.Map">
+        select
+
+        res.resource_id AS resourceId, res.app_code AS appCode, res.class_name AS className, res.method_name AS
+        methodName, res.modular_code AS modularCode,modular_name as modularName, res.code AS code, res.name AS name,
+        res.url AS url, res.http_method AS
+        httpMethod, res.menu_flag AS menuFlag, res.required_login_flag AS requiredLoginFlag,
+        res.required_permission_flag AS requiredPermissionFlag, app.app_name as appName
+
+        from biemo_sys_resource res
+        inner join biemo_sys_app app on res.app_code = app.app_code
+        where 1 = 1
+        <if test="appName != null and appName != ''">
+            and (app.app_name like CONCAT('%',#{appName},'%'))
+        </if>
+        <if test="resourceName != null and resourceName != ''">
+            and (res.name like CONCAT('%',#{resourceName},'%'))
+        </if>
+        <if test="menuFlag != null and menuFlag != ''">
+            and (res.menu_flag = #{menuFlag})
+        </if>
+    </select>
+
+    <select id="getResourceLeftList" resultType="java.util.Map">
+        select
+        res.code AS code
+        from biemo_sys_resource res
+        where 1 = 1
+        AND res.url IN
+        <foreach item="resourcesUrl" index="index" collection="set"
+                 open="(" separator="," close=")">#{resourcesUrl}
+        </foreach>
+
+        <!--<if test="appCode != null and appCode != ''">-->
+             <!--and res.app_code = #{appCode}-->
+        <!--</if>-->
+    </select>
+
+</mapper>

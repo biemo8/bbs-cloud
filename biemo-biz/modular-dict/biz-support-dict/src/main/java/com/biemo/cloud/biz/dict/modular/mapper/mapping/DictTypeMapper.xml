@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.biz.dict.modular.mapper.DictTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.biz.dict.api.entity.DictType">
+        <id column="DICT_TYPE_ID" property="dictTypeId"/>
+        <result column="DICT_TYPE_CLASS" property="dictTypeClass"/>
+        <result column="DICT_TYPE_CODE" property="dictTypeCode"/>
+        <result column="DICT_TYPE_NAME" property="dictTypeName"/>
+        <result column="DICT_TYPE_DESC" property="dictTypeDesc"/>
+        <result column="STATUS" property="status"/>
+        <result column="APP_CODE" property="appCode"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        DICT_TYPE_ID AS dictTypeId, DICT_TYPE_CLASS AS dictTypeClass, DICT_TYPE_CODE AS dictTypeCode, DICT_TYPE_NAME AS dictTypeName, DICT_TYPE_DESC AS dictTypeDesc, STATUS AS status, APP_CODE AS appCode, CREATE_TIME AS createTime, UPDATE_TIME AS updateTime
+    </sql>
+
+    <!--查询字典类型列表-->
+    <select id="getDictTypeList" resultType="com.biemo.cloud.biz.dict.api.model.DictTypeInfo">
+        SELECT
+        DICT_TYPE_ID AS dictTypeId,
+        DICT_TYPE_CLASS AS dictTypeClass,
+        DICT_TYPE_CODE AS dictTypeCode,
+        DICT_TYPE_NAME AS dictTypeName,
+        DICT_TYPE_DESC AS dictTypeDesc,
+        STATUS AS STATUS
+        FROM
+        SYS_DICT_TYPE
+        where 1 = 1
+        <if test="dictTypeName != null and dictTypeName !=''">
+            DICT_TYPE_NAME like CONCAT('%',#{dictTypeName},'%')
+        </if>
+        <if test="dictTypeDesc != null and dictTypeDesc !=''">
+            AND DICT_TYPE_DESC like CONCAT('%',#{dictTypeDesc},'%')
+        </if>
+        <if test="dictTypeCode != null and dictTypeCode !=''">
+            AND DICT_TYPE_CODE like CONCAT('%',#{dictTypeCode},'%')
+        </if>
+        <if test="status != null and status !=''">
+            AND STATUS = #{status}
+        </if>
+    </select>
+</mapper>

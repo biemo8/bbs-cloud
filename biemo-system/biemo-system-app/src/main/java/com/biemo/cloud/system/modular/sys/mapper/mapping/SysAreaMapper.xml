@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysAreaMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysArea">
+        <id column="area_id" property="areaId" />
+        <result column="area_code" property="areaCode" />
+        <result column="full_name" property="fullName" />
+        <result column="short_name" property="shortName" />
+        <result column="bincode" property="bincode" />
+        <result column="parent_id" property="parentId" />
+        <result column="area_level" property="areaLevel" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        area_id AS "areaId", area_code AS "areaCode", full_name AS "fullName", short_name AS "shortName", bincode AS "bincode", parent_id AS "parentId", area_level AS "areaLevel"
+    </sql>
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysAreaResult" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysAreaParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_area where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysAreaParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_area where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysAreaResult" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysAreaParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_area where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysAreaParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_area where 1 = 1
+    </select>
+
+</mapper>

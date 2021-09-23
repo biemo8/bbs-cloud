@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysButtonMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysButton">
+        <id column="button_id" property="buttonId"/>
+        <result column="menu_id" property="menuId"/>
+        <result column="resource_id" property="resourceId"/>
+        <result column="button_name" property="buttonName"/>
+        <result column="button_code" property="buttonCode"/>
+        <result column="description" property="description"/>
+        <result column="status" property="status"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        button_id AS "buttonId", menu_id AS "menuId", resource_id AS "resourceId", button_name AS "buttonName", button_code AS "buttonCode", description AS "description", status AS "status", order_no AS "orderNo", create_user AS "createUser", create_time AS "createTime", update_user AS "updateUser", update_time AS "updateTime"
+    </sql>
+
+    <select id="customPageList" resultType="java.util.Map"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysButtonParam">
+        SELECT
+        b.button_id AS buttonId,
+        b.button_name AS buttonName,
+        b.button_code AS buttonCode,
+        b.`status` AS status,
+        r.resource_id AS resourceId,
+        r.class_name AS controllerName,
+        r.`name` AS resourceName
+        FROM
+        biemo_sys_button b
+        INNER JOIN biemo_sys_resource r ON b.res_code = r.code
+        <where>
+            <if test="menuId != null and menuId != ''">
+                and b.menu_id = #{menuId}
+            </if>
+            <if test="buttonName != null and buttonName != ''">
+                and b.button_name like concat('%',#{buttonName},'%')
+            </if>
+            <if test="buttonCode != null and buttonCode != ''">
+                and b.button_code like concat('%',#{buttonCode},'%')
+            </if>
+        </where>
+        order by b.order_no asc,b.create_time desc
+    </select>
+    <select id="getButtonResCodesByAppId" resultType="java.lang.String">
+        SELECT
+	b.res_code
+    FROM
+	biemo_sys_button b
+	LEFT JOIN biemo_sys_menu m ON b.menu_id = m.menu_id
+	WHERE m.app_id = #{appId}
+    </select>
+    <select id="getAllControllers" resultType="java.util.Map">
+        SELECT
+	modular_name AS modularName,
+	modular_code AS modularCode
+    FROM
+	biemo_sys_resource
+    WHERE
+	menu_flag = 'N'
+	AND app_code = #{appCode}
+	GROUP BY modular_code
+    </select>
+    <select id="getResMapsByModularCode" resultType="java.util.Map">
+        SELECT
+	 `name` AS resName,
+	 `code` AS resCode
+    FROM
+	biemo_sys_resource
+	WHERE modular_code = #{modularCode}
+    </select>
+
+</mapper>

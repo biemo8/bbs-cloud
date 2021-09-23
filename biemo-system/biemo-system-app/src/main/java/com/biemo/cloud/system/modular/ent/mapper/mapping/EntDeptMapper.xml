@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.ent.mapper.EntDeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.ent.entity.EntDept">
+        <id column="dept_id" property="deptId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="dept_short_name" property="deptShortName"/>
+        <result column="dept_code" property="deptCode"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_ids" property="parentIds"/>
+        <result column="status" property="status"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="description" property="description"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        dept_id AS "deptId", company_id AS "companyId", dept_name AS "deptName", dept_short_name AS "deptShortName", dept_code AS "deptCode", parent_id AS "parentId", parent_ids AS "parentIds", status AS "status", order_no AS "orderNo", description AS "description", create_time AS "createTime", create_user AS "createUser", update_time AS "updateTime", update_user AS "updateUser"
+    </sql>
+
+    <sql id="Page_Column_List">
+        dept_id AS "deptId",company_id AS "companyId",dept_name AS "deptName", dept_short_name AS "deptShortName", dept_code AS "deptCode", parent_id AS "parentId", status AS "status", description AS "description"
+    </sql>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.ent.model.result.EntDeptResult"
+            parameterType="com.biemo.cloud.system.modular.ent.model.params.EntDeptParam">
+        select
+        <include refid="Page_Column_List"/>
+        from biemo_ent_dept
+        <where>
+            <if test="paramCondition.companyId != null and paramCondition.companyId != ''">
+                and company_id = #{paramCondition.companyId}
+            </if>
+            <if test="paramCondition.deptName != null and paramCondition.deptName != ''">
+                and dept_name like concat('%',#{paramCondition.deptName},'%')
+            </if>
+            <if test="paramCondition.deptCode != null and paramCondition.deptCode != ''">
+                and dept_code = #{paramCondition.deptCode}
+            </if>
+        </where>
+        order by order_no asc,status asc,create_time asc
+    </select>
+
+    <select id="queryDeptTree" resultType="java.util.Map">
+        select
+        dept_id as nodeId,
+        dept_name as nodeName,
+        dept_short_name as shortName,
+        parent_id as nodePid,
+        #{nodeType} as nodeType
+        from biemo_ent_dept
+        where status = 1 and company_id = #{companyId}
+        order by order_no asc
+    </select>
+
+</mapper>

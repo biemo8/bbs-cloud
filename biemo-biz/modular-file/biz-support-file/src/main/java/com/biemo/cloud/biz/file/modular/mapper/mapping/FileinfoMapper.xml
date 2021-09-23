@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.biz.file.modular.mapper.FileinfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.biz.file.api.entity.Fileinfo">
+        <id column="FILE_ID" property="fileId"/>
+        <result column="APP_CODE" property="appCode"/>
+        <result column="FILE_URL" property="fileUrl"/>
+        <result column="FILE_ORIGIN_NAME" property="fileOriginName"/>
+        <result column="FILE_SUFFIX" property="fileSuffix"/>
+        <result column="FILE_SIZE" property="fileSize"/>
+        <result column="FILE_STORAGE_NAME" property="fileStorageName"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        FILE_ID AS fileId, APP_CODE AS appCode, FILE_URL AS fileUrl, FILE_ORIGIN_NAME AS fileOriginName, FILE_SUFFIX AS fileSuffix, FILE_SIZE AS fileSize, FILE_STORAGE_NAME AS fileStorageName, CREATE_TIME AS createTime, UPDATE_TIME AS updateTime
+    </sql>
+
+
+    <select id="getFileInfoList" resultType="com.biemo.cloud.biz.file.api.entity.Fileinfo">
+
+        SELECT
+        FILE_ID AS fileId,
+        APP_CODE AS appCode,
+        FILE_URL AS fileUrl,
+        FILE_ORIGIN_NAME AS fileOriginName,
+        FILE_SUFFIX AS fileSuffix,
+        FILE_SIZE AS fileSize,
+        FILE_STORAGE_NAME AS fileStorageName,
+        CREATE_TIME AS createTime,
+        UPDATE_TIME AS updateTime
+        FROM
+        sys_fileinfo
+        where 1 = 1
+        <if test="appCode != null and appCode != ''">
+            AND APP_CODE = #{appCode}
+        </if>
+        <if test="fileOriginName != null and fileOriginName!= ''">
+            AND FILE_ORIGIN_NAME LIKE CONCAT('%',#{fileOriginName},'%')
+        </if>
+        <if test="fileSuffix != null and fileSuffix!= ''">
+            AND FILE_SUFFIX = #{fileSuffix}
+        </if>
+        <if test="fileId != null and fileId != ''">
+            AND FILE_ID = #{fileId}
+        </if>
+
+    </select>
+
+</mapper>

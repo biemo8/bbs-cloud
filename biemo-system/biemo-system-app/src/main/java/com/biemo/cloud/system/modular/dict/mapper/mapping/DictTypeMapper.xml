@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.dict.mapper.DictTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.dict.entity.SysDictType">
+        <id column="dict_type_id" property="dictTypeId" />
+        <result column="dict_type_class" property="dictTypeClass" />
+        <result column="dict_type_code" property="dictTypeCode" />
+        <result column="dict_type_name" property="dictTypeName" />
+        <result column="dict_type_desc" property="dictTypeDesc" />
+        <result column="status" property="status" />
+        <result column="app_code" property="appCode" />
+        <result column="order_no" property="orderNo" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        dict_type_id AS "dictTypeId", dict_type_class AS "dictTypeClass", dict_type_code AS "dictTypeCode", dict_type_name AS "dictTypeName", dict_type_desc AS "dictTypeDesc", status AS "status", app_code AS "appCode", order_no AS "orderNo", create_user AS "createUser", create_time AS "createTime", update_user AS "updateUser", update_time AS "updateTime", del_flag AS "delFlag"
+    </sql>
+
+    <!--查询字典类型列表-->
+    <select id="getDictTypeList" resultType="com.biemo.cloud.system.modular.dict.model.DictTypeInfo">
+        SELECT
+        dict_type_id AS dictTypeId,
+        dict_type_class AS dictTypeClass,
+        dict_type_code AS dictTypeCode,
+        dict_type_name AS dictTypeName,
+        dict_type_desc AS dictTypeDesc,
+        order_no AS orderNo,
+        status AS status
+        FROM
+        biemo_sys_dict_type
+        where del_flag = 'N'
+        <if test="dictTypeInfo.dictTypeName != null and dictTypeInfo.dictTypeName !=''">
+            AND dict_type_name like CONCAT('%',#{dictTypeInfo.dictTypeName},'%')
+        </if>
+        <if test="dictTypeInfo.dictTypeDesc != null and dictTypeInfo.dictTypeDesc !=''">
+            AND dict_type_desc like CONCAT('%',#{dictTypeInfo.dictTypeDesc},'%')
+        </if>
+        <if test="dictTypeInfo.dictTypeCode != null and dictTypeInfo.dictTypeCode !=''">
+            AND dict_type_code like CONCAT('%',#{dictTypeInfo.dictTypeCode},'%')
+        </if>
+        <if test="dictTypeInfo.status != null and dictTypeInfo.status !=''">
+            AND status = #{dictTypeInfo.status}
+        </if>
+        ORDER BY
+        order_no
+    </select>
+</mapper>

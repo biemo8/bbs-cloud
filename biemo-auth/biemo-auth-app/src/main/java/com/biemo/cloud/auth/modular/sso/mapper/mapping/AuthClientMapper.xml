@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.auth.modular.sso.mapper.AuthClientMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.auth.modular.sso.entity.AuthClient">
+        <id column="client_id" property="clientId"/>
+        <result column="app_id" property="appId"/>
+        <result column="name" property="name"/>
+        <result column="sso_url" property="ssoUrl"/>
+        <result column="client_type" property="clientType"/>
+        <result column="login_type" property="loginType"/>
+        <result column="private_key" property="privateKey"/>
+        <result column="sign_private_key" property="signPrivateKey"/>
+        <result column="data_private_key" property="dataPrivateKey"/>
+        <result column="token_exp" property="tokenExp"/>
+        <result column="refresh_token_exp" property="refreshTokenExp"/>
+        <result column="login_out_url" property="loginOutUrl"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        client_id AS "clientId", app_id AS "appId", name AS "name", sso_url AS "ssoUrl", client_type AS "clientType", login_type AS "loginType", private_key AS "privateKey", sign_private_key AS "signPrivateKey", data_private_key AS "dataPrivateKey", token_exp AS "tokenExp", refresh_token_exp AS "refreshTokenExp", login_out_url AS "loginOutUrl", create_time AS "createTime", create_user AS "createUser", update_time AS "updateTime", update_user AS "updateUser", del_flag AS "delFlag"
+    </sql>
+
+    <select id="customList" resultType="com.biemo.cloud.auth.modular.sso.model.result.AuthClientResult" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthClientParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_client where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthClientParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_client where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.auth.modular.sso.model.result.AuthClientResult" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthClientParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_client where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.auth.modular.sso.model.params.AuthClientParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_auth_client where 1 = 1
+    </select>
+
+    <select id="pageList" resultType="java.util.Map">
+        SELECT
+        client_id AS "clientId",
+        c.app_id AS "appId",
+        c.`name` AS "name",
+        c.sso_url AS "ssoUrl",
+        c.client_type AS "clientType",
+        c.login_type AS "loginType",
+        c.sort AS "sort",
+        c.del_flag AS "delFlag"
+        FROM
+        biemo_auth_client c
+        WHERE
+        1 = 1
+        AND c.del_flag = 'N'
+        <if test="param.name != null and param.name != ''">
+            and c.`name` like CONCAT('%',#{param.name},'%')
+        </if>
+        <if test="param.appId != null and param.appId != ''">
+            and c.`app_id` = #{param.appId}
+        </if>
+        ORDER BY
+        c.sort
+    </select>
+
+</mapper>

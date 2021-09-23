@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysPermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysPermission">
+        <id column="permission_id" property="permissionId"/>
+        <result column="permission_name" property="permissionName"/>
+        <result column="permission_desc" property="permissionDesc"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="app_id" property="appId"/>
+        <result column="status" property="status"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="del_flag" property="delFlag"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        permission_id AS "permissionId", permission_name AS "permissionName", permission_desc AS "permissionDesc", order_no AS "orderNo", parent_id AS "parentId", app_id AS "appId", status AS "status", create_user AS "createUser", create_time AS "createTime", update_user AS "updateUser", update_time AS "updateTime", del_flag AS "delFlag"
+    </sql>
+
+
+    <sql id="Base_Select_List">
+        n.permission_id AS permissionId,
+        n.app_id AS appId,
+        n.permission_name AS permissionName,
+        n.permission_desc AS permissionDesc,
+        n.parent_id AS parentId,
+        n.order_no AS orderNo,
+        n.status AS status,
+        m.permission_name as parentName,
+        p.app_name AS appName
+    </sql>
+
+    <sql id="Base_Table_List">
+        biemo_sys_permission n
+        INNER JOIN biemo_sys_app p ON n.app_id = p.APP_ID
+        LEFT JOIN  biemo_sys_permission m ON n.parent_id = m.permission_id
+    </sql>
+
+    <sql id="Base_Where_List">
+        1 = 1
+        <if test="appId != null and appId !=''">
+            and n.app_id = #{appId}
+        </if>
+        <if test="parentId != null and parentId !=''">
+            and n.parent_id = #{parentId}
+        </if>
+        <if test="status != null and status !=''">
+            and n.status = #{status}
+        </if>
+        AND n.del_flag = #{delFlag}
+    </sql>
+
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysPermissionResult"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysPermissionParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_permission where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysPermissionParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_permission where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysPermissionResult"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysPermissionParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_permission where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysPermissionParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_permission where 1 = 1
+    </select>
+
+    <!-- 批量更新权限状态 -->
+    <update id="setPermissionStatus" parameterType="map">
+        UPDATE
+        biemo_sys_permission
+        SET
+        STATUS = #{status},
+        UPDATE_TIME = #{updateTime},
+        UPDATE_USER = #{updateUser}
+        WHERE
+        1 = 1
+        AND PERMISSION_ID IN
+        <foreach collection="permissionIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!-- 分页带条件查询权限列表 -->
+    <select id="selectPermissionPageList" resultType="map" parameterType="map">
+        SELECT
+        n.permission_id AS permissionId,
+        n.app_id AS appId,
+        n.permission_name AS permissionName,
+        n.permission_desc AS permissionDesc,
+        n.parent_id AS parentId,
+        n.order_no AS orderNo,
+        n.status AS status,
+        m.permission_name as parentName,
+        p.app_name AS appName
+        FROM
+        biemo_sys_permission n
+        INNER JOIN biemo_sys_app p ON n.app_id = p.APP_ID
+        LEFT JOIN biemo_sys_permission m ON n.parent_id = m.permission_id
+        WHERE
+        1 = 1
+        <if test="param.appId != null and param.appId !=''">
+            and n.app_id = #{param.appId}
+        </if>
+        <if test="param.parentId != null and param.parentId !=''">
+            and n.parent_id = #{param.parentId}
+        </if>
+        <if test="param.status != null and param.status !=''">
+            and n.status = #{param.status}
+        </if>
+        <if test="param.permissionName != null and param.permissionName !=''">
+            and n.PERMISSION_NAME like CONCAT('%',#{param.permissionName},'%')
+        </if>
+        AND n.del_flag = #{param.delFlag}
+        ORDER BY n.app_id ASC, n.parent_id ASC ,n.create_time ASC
+    </select>
+
+    <!-- 带条件查询权限列表 -->
+    <select id="selectPermissionList" resultType="map" parameterType="map">
+        SELECT
+        n.permission_id AS permissionId,
+        n.app_id AS appId,
+        n.permission_name AS permissionName,
+        n.permission_desc AS permissionDesc,
+        n.parent_id AS parentId,
+        n.order_no AS orderNo,
+        n.status AS status,
+        m.permission_name as parentName,
+        p.app_name AS appName
+        FROM
+        biemo_sys_permission n
+        INNER JOIN biemo_sys_app p ON n.app_id = p.APP_ID
+        LEFT JOIN biemo_sys_permission m ON n.parent_id = m.permission_id
+        WHERE
+        1 = 1
+        <if test="appId != null and appId !=''">
+            and n.app_id = #{appId}
+        </if>
+        <if test="status != null and status !=''">
+            and n.status = #{status}
+        </if>
+        AND n.del_flag = #{delFlag}
+    </select>
+
+    <select id="selectPermissionTree" resultType="map" parameterType="map">
+        SELECT
+        app.APP_ID AS permissionId,
+        app.APP_ID AS appId,
+        app.APP_NAME AS permissionName,
+        '-1' AS parentId
+        FROM
+        biemo_sys_app app
+        WHERE
+        1=1
+        <if test="appId != null and appId !=''">
+            and app.APP_ID = #{appId}
+        </if>
+        UNION
+        SELECT
+        pm.PERMISSION_ID AS permissionId,
+        pm.APP_ID AS appId,
+        pm.PERMISSION_NAME AS permissionName,
+        if(PARENT_ID='-1', APP_ID, PARENT_ID) AS parentId
+        FROM
+        biemo_sys_permission pm
+        LEFT JOIN biemo_sys_role_permission role_pm on role_pm.PERMISSION_ID = pm.PERMISSION_ID
+        WHERE
+        1=1
+        <if test="appId != null and appId !=''">
+            and pm.APP_ID = #{appId}
+        </if>
+        <if test="appId != null and appId !=''">
+            and pm.APP_ID = #{appId}
+        </if>
+        <if test="delFlag != null and delFlag !=''">
+            and pm.DEL_FLAG = #{delFlag}
+        </if>
+        <if test="status != null and status !=''">
+            and pm.STATUS = #{status}
+        </if>
+
+    </select>
+
+    <select id="findPermissionByRole" resultType="map" parameterType="map">
+        SELECT
+        pm.PERMISSION_ID AS permissionId,
+        pm.APP_ID AS appId,
+        pm.PERMISSION_NAME AS permissionName,
+        if(PARENT_ID='-1', APP_ID, PARENT_ID) AS parentId,
+        if(role_pm.ROLE_ID = #{roleId}, 1, 0) as checked
+        FROM
+        biemo_sys_permission pm
+        LEFT JOIN biemo_sys_role_permission role_pm on
+        role_pm.PERMISSION_ID = pm.PERMISSION_ID and role_pm.ROLE_ID = #{roleId}
+        WHERE
+        1=1
+        <if test="appId != null and appId !=''">
+            and pm.APP_ID = #{appId}
+        </if>
+        <if test="delFlag != null and delFlag !=''">
+            and pm.DEL_FLAG = #{delFlag}
+        </if>
+        <if test="status != null and status !=''">
+            and pm.STATUS = #{status}
+        </if>
+
+    </select>
+
+    <select id="findRoleAllPermissions" resultType="long" parameterType="map">
+        SELECT
+        role_pm.PERMISSION_ID AS permissionId
+        FROM
+        biemo_sys_role_permission role_pm
+        WHERE
+        1=1
+        <if test="roleId != null and roleId !=''">
+            and role_pm.ROLE_ID = #{roleId}
+        </if>
+    </select>
+    <select id="getButtonByAppCode" resultType="java.util.Map">
+        SELECT
+	b.button_id AS buttonId,
+	b.menu_id AS menuId,
+	b.button_code AS buttonCode,
+	r.url AS resourceUrl
+    FROM
+	biemo_sys_button b
+	INNER JOIN biemo_sys_menu m ON b.menu_id = m.menu_id
+	INNER JOIN biemo_sys_app a ON m.app_id = a.app_id
+	INNER JOIN biemo_sys_resource r ON r.code = b.res_code
+	WHERE a.app_code = #{appCode}
+    </select>
+
+
+</mapper>

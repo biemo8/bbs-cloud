@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.bbs.modular.mapper.BAttachmentMapper">
+
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.BAttachment" id="BAttachmentResult">
+        <result property="id"    column="id"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="uploadDate"    column="upload_date"    />
+        <result property="uploadIp"    column="upload_ip"    />
+        <result property="fileExtname"    column="file_extname"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="url"    column="url"    />
+        <result property="originalFileName"    column="original_file_name"    />
+        <result property="type"    column="type"    />
+        <result property="fileKey"    column="file_key"    />
+    </resultMap>
+</mapper>

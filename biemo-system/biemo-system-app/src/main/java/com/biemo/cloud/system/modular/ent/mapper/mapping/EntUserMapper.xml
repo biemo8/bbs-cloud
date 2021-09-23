@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.ent.mapper.EntUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.ent.entity.EntUser">
+        <id column="user_id" property="userId"/>
+        <result column="name" property="name"/>
+        <result column="user_code" property="userCode"/>
+        <result column="last_name" property="lastName"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name_pinyin" property="lastNamePinyin"/>
+        <result column="first_name_pinyin" property="firstNamePinyin"/>
+        <result column="sex" property="sex"/>
+        <result column="birthday" property="birthday"/>
+        <result column="education" property="education"/>
+        <result column="birthplace" property="birthplace"/>
+        <result column="nation" property="nation"/>
+        <result column="id_card" property="idCard"/>
+        <result column="matrimony" property="matrimony"/>
+        <result column="political" property="political"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="mobile_phone" property="mobilePhone"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_user" property="updateUser"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id AS "userId", name AS "name", user_code AS "userCode", last_name AS "lastName", first_name AS "firstName", last_name_pinyin AS "lastNamePinyin", first_name_pinyin AS "firstNamePinyin", sex AS "sex", birthday AS "birthday", education AS "education", birthplace AS "birthplace", nation AS "nation", id_card AS "idCard", matrimony AS "matrimony", political AS "political", email AS "email", phone AS "phone", mobile_phone AS "mobilePhone", order_no AS "orderNo", status AS "status", create_time AS "createTime", create_user AS "createUser", update_time AS "updateTime", update_user AS "updateUser"
+    </sql>
+
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.ent.model.result.EntUserResult"
+            parameterType="com.biemo.cloud.system.modular.ent.model.params.EntUserParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_ent_user where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map"
+            parameterType="com.biemo.cloud.system.modular.ent.model.params.EntUserParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_ent_user where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.ent.model.result.EntUserQueryResult"
+            parameterType="com.biemo.cloud.system.modular.ent.model.params.EntUserParam">
+        SELECT
+        user.user_id AS userId,
+        comp.`name` AS companyName,
+        dept.dept_name AS deptName,
+        duty.duty_name AS dutyName,
+        user.name AS userName,
+        CASE user.sex
+        WHEN "M" THEN "男"
+        WHEN "F" THEN  "女"
+        end  AS sex,
+        act.account AS account,
+        user.`status`
+        FROM
+        biemo_ent_user_dept ud
+        INNER JOIN biemo_ent_user user ON ud.user_id = user.user_id
+        INNER JOIN biemo_ent_dept dept ON dept.dept_id = ud.dept_id
+        INNER JOIN biemo_ent_company comp ON comp.company_id = dept.company_id
+        INNER JOIN biemo_ent_duty duty ON duty.duty_id = ud.duty_id
+        INNER JOIN biemo_ent_user_account act ON user.user_id = act.user_id
+        WHERE ud.default_flag = 'Y'
+        <if test="paramCondition.companyId != null and paramCondition.companyId != ''">
+            AND dept.company_id = #{paramCondition.companyId}
+        </if>
+        <if test="paramCondition.deptId != null and paramCondition.deptId != ''">
+            AND dept.dept_id = #{paramCondition.deptId}
+        </if>
+        <if test="paramCondition.name != null and paramCondition.name != ''">
+            AND user.name like concat('%',#{paramCondition.name},'%')
+        </if>
+        <if test="paramCondition.account != null and paramCondition.account != ''">
+            AND act.account like concat('%',#{paramCondition.account},'%')
+        </if>
+        ORDER BY user.order_no asc
+
+    </select>
+
+    <select id="customPageMapList" resultType="map"
+            parameterType="com.biemo.cloud.system.modular.ent.model.params.EntUserParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_ent_user
+    </select>
+    <select id="getCompanyIdsByUserId" resultType="java.lang.Long">
+        SELECT
+	ca.app_id
+    FROM
+	biemo_ent_user_dept ud
+	INNER JOIN biemo_ent_comp_app ca ON ud.company_id = ca.company_id
+    WHERE
+	user_id = #{userId}
+    </select>
+    <select id="getAccountIdByUserId" resultType="java.lang.Long">
+        select account_id from biemo_ent_user_account where user_id = #{userId}
+    </select>
+    <select id="getUserRoles" resultType="java.lang.Long">
+        SELECT
+	ur.role_id
+    FROM
+	biemo_ent_user_account ua
+	INNER JOIN biemo_sys_user_role ur ON ua.account_id = ur.account_id
+	WHERE ua.user_id = #{userId}
+    </select>
+
+
+</mapper>

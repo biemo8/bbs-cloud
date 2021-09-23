@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.biemo.cloud.kernel.validator.config.ValidatorAutoConfiguration

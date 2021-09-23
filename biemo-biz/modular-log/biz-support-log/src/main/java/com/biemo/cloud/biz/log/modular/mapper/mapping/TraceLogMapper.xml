@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.biz.log.modular.mapper.TraceLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.biz.log.api.entity.TraceLog">
+        <id column="ID" property="id"/>
+        <result column="APP_CODE" property="appCode"/>
+        <result column="IP" property="ip"/>
+        <result column="SERVLET_PATH" property="servletPath"/>
+        <result column="RPC_PHASE" property="rpcPhase"/>
+        <result column="TRACE_ID" property="traceId"/>
+        <result column="SPAN_ID" property="spanId"/>
+        <result column="PARENT_SPAN_ID" property="parentSpanId"/>
+        <result column="CONTENT" property="content"/>
+        <result column="CREATE_TIMESTAMP" property="createTimestamp"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID AS id, APP_CODE AS appCode, IP AS ip, SERVLET_PATH AS servletPath, RPC_PHASE AS rpcPhase, TRACE_ID AS traceId, SPAN_ID AS spanId, PARENT_SPAN_ID AS parentSpanId, CONTENT AS content, CREATE_TIMESTAMP AS createTimestamp
+    </sql>
+
+    <select id="getTraceLogCount" resultType="java.lang.Long">
+        select ID from log_trace_log order by ID desc limit 0,1
+    </select>
+
+    <select id="getTraceLogList" resultType="com.biemo.cloud.biz.log.api.entity.TraceLog">
+        SELECT
+        ID AS id, APP_CODE AS appCode, IP AS ip, SERVLET_PATH AS servletPath, RPC_PHASE AS rpcPhase, TRACE_ID AS traceId,
+        SPAN_ID AS spanId, PARENT_SPAN_ID AS parentSpanId, CREATE_TIMESTAMP AS createTimestamp
+        from log_trace_log
+        where id &lt;=
+        (
+        #{gtValue} - #{pageSize} * (#{pageNo}-1)
+        )
+        ORDER BY ID desc LIMIT 0, #{pageSize};
+    </select>
+
+    <select id="getTraceLogListByCondition" resultType="com.biemo.cloud.biz.log.api.entity.TraceLog">
+        SELECT
+        ID AS id, APP_CODE AS appCode, IP AS ip, SERVLET_PATH AS servletPath, RPC_PHASE AS rpcPhase, TRACE_ID AS
+        traceId,
+        SPAN_ID AS spanId, PARENT_SPAN_ID AS parentSpanId, CREATE_TIMESTAMP AS createTimestamp
+        from log_trace_log
+        where 1 = 1
+        <if test="traceId != null and traceId != ''">
+            and TRACE_ID = #{traceId}
+        </if>
+        <if test="appCode != null and appCode != ''">
+            and `APP_CODE` = #{appCode}
+        </if>
+        <if test="rpcPhase != null and rpcPhase != ''">
+            and RPC_PHASE = #{rpcPhase}
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and ( CREATE_TIMESTAMP &gt;= #{beginTime} and CREATE_TIMESTAMP &lt;= #{endTime} )
+        </if>
+        ORDER BY ID desc LIMIT #{limitOffset}, #{pageSize};
+    </select>
+
+    <select id="getTraceLogListPageByCondition" resultType="com.biemo.cloud.biz.log.api.entity.TraceLog">
+        SELECT
+        ID AS id, APP_CODE AS appCode, IP AS ip, SERVLET_PATH AS servletPath, RPC_PHASE AS rpcPhase, TRACE_ID AS
+        traceId,
+        SPAN_ID AS spanId, PARENT_SPAN_ID AS parentSpanId, CREATE_TIMESTAMP AS createTimestamp
+        from log_trace_log
+        where 1 = 1
+        <if test="traceId != null and traceId != ''">
+            and TRACE_ID = #{traceId}
+        </if>
+        <if test="appCode != null and appCode != ''">
+            and `APP_CODE` = #{appCode}
+        </if>
+        <if test="rpcPhase != null and rpcPhase != ''">
+            and RPC_PHASE = #{rpcPhase}
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+            and ( CREATE_TIMESTAMP &gt;= #{beginTime} and CREATE_TIMESTAMP &lt;= #{endTime} )
+        </if>
+        ORDER BY ID desc
+    </select>
+
+</mapper>

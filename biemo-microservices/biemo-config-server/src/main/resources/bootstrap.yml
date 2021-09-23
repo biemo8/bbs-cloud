@@ -1,0 +1,116 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: BIEMO-CONFIG-SERVER
+  profiles:
+    active: @spring.active@
+    #active: native
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+---
+
+spring:
+  profiles: local
+  cloud:
+    config:
+      server:
+        bootstrap: true
+        git:
+          uri: http://192.168.3.177:8800/common/data-cloud-config.git
+          username: config
+          password: 12345678
+          search-paths: /**
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:9001
+        instance:
+          service-base-url: http://127.0.0.1:8002
+
+---
+
+spring:
+  profiles: test
+  cloud:
+    config:
+      server:
+        bootstrap: true
+        git:
+          uri: http://192.168.3.177:8800/common/data-cloud-config.git
+          username: config
+          password: 12345678
+          search-paths: /**
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:9001
+        instance:
+          service-base-url: http://127.0.0.1:8002
+
+---
+
+spring:
+  profiles: dev
+  cloud:
+    config:
+      server:
+        bootstrap: true
+        git:
+          uri: https://gitee.com/xxx/xxxxxx.git
+          username: xxx
+          password: xxxxxxxxx
+          search-paths: /**
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:9000
+        instance:
+          service-base-url: http://127.0.0.1:8002
+
+---
+
+spring:
+  profiles: produce
+  cloud:
+    config:
+      server:
+        bootstrap: true
+        git:
+          uri: https://gitee.com/xxx/xxxxxx.git
+          username: xxx
+          password: xxxxxxxxx
+          search-paths: /**
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:9000
+        instance:
+          service-base-url: http://127.0.0.1:8002
+
+---
+
+spring:
+  profiles: native
+  cloud:
+    config:
+      server:
+        bootstrap: true
+        native:
+          search-locations: /usr/local/java-jar/config
+          default-label: /
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:9000
+        instance:
+          service-base-url: http://127.0.0.1:8002

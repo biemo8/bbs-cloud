@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.ent.mapper.EntCompAppMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.ent.entity.EntCompApp">
+        <id column="id" property="id" />
+        <result column="company_id" property="companyId" />
+        <result column="app_id" property="appId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id AS "id", company_id AS "companyId", app_id AS "appId"
+    </sql>
+
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.ent.model.result.EntCompAppResult" parameterType="com.biemo.cloud.system.modular.ent.model.params.EntCompAppParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_ent_comp_app where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.ent.model.params.EntCompAppParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_ent_comp_app where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.ent.model.result.EntCompAppResult" parameterType="com.biemo.cloud.system.modular.ent.model.params.EntCompAppParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_ent_comp_app where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.ent.model.params.EntCompAppParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_ent_comp_app where 1 = 1
+    </select>
+
+</mapper>

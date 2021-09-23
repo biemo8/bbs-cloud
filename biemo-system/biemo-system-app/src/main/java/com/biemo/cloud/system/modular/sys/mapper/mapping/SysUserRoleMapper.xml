@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysUserRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysUserRole">
+        <id column="user_role_id" property="userRoleId" />
+        <result column="account_id" property="accountId" />
+        <result column="role_id" property="roleId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_role_id AS "userRoleId", account_id AS "accountId", role_id AS "roleId"
+    </sql>
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysUserRoleResult"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysUserRoleParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_user_role where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysUserRoleParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_user_role where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysUserRoleResult"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysUserRoleParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_user_role where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map"
+            parameterType="com.biemo.cloud.system.modular.sys.model.params.SysUserRoleParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_user_role where 1 = 1
+    </select>
+
+    <select id="getUserRoleInfo"  resultType = "com.biemo.cloud.system.modular.sys.model.params.RoleInfo">
+        select
+        ur.account_id AS "accountId", ur.role_id AS "roleId", r.role_name as "roleName"
+        from biemo_sys_user_role ur
+        LEFT JOIN biemo_sys_role r on ur.role_id = r.role_id
+        where ur.account_id = #{accountId}
+    </select>
+
+    <!-- 获取企业应用人员角色信息列表 -->
+    <select id="findCompanyUserRoleInfo" resultType="map" parameterType="map">
+        SELECT uu.*,GROUP_CONCAT(uu.userName) AS names ,GROUP_CONCAT(uu.infoId) AS infoIds
+        from (
+        SELECT
+        DISTINCT p.APP_NAME AS appName,
+        n.ROLE_ID AS roleId,
+        n.ROLE_CODE AS roleCode,
+        n.ROLE_NAME AS roleName,
+        n.ROLE_DESC AS roleDesc,
+        n.APP_ID AS appId,
+        n.STATUS AS roleStatus,
+        p.INFO_ID AS infoId,
+        p.`NAME` AS username,
+        p.ORDER_NO AS orderNo,
+        n.ORDER_NO AS rOrderNo
+        FROM
+        biemo_sys_role n
+        INNER JOIN biemo_sys_app p ON n.APP_ID = p.APP_ID
+        LEFT JOIN biemo_sys_user_role m ON n.ROLE_ID = m.ROLE_ID
+        Left JOIN
+        (SELECT DISTINCT a.ACCOUNT_ID ,u.INFO_ID,u.`NAME`
+        FROM
+        biemo_ent_user_account a
+        INNER JOIN biemo_ent_user_info u ON a.INFO_ID = u.INFO_ID
+        where a.COMPANY_ID = #{companyId}) p on m.ACCOUNT_ID = p.ACCOUNT_ID
+        WHERE
+        1 = 1
+        <if test="roleName != null and roleName !=''">
+            AND n.ROLE_NAME LIKE CONCAT('%',#{roleName},'%')
+        </if>
+        <if test="roleType != null and roleType !=''">
+            AND n.ROLE_TYPE = #{roleType}
+        </if>
+        <if test="blocFlag != null and blocFlag.size > 0">
+            AND n.BLOC_FLAG IN
+            <foreach collection="blocFlag" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="hideFlag != null and hideFlag !=''">
+            AND n.HIDE_FLAG = #{hideFlag}
+        </if>
+        <if test="status != null and status !=''">
+            AND n.STATUS = #{status}
+        </if>
+        <if test="delFlag != null and delFlag !=''">
+            AND n.DEL_FLAG = #{delFlag}
+        </if>
+        <if test="appIds != null and appIds.size > 0">
+            AND n.APP_ID IN
+            <foreach collection="appIds" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="mgrFlag != null and mgrFlag.size > 0">
+            AND n.MGR_FLAG IN
+            <foreach collection="mgrFlag" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        ) uu GROUP BY uu.roleId
+        ORDER BY uu.orderNo,uu.rOrderNo ASC
+    </select>
+
+    <sql id="Base_Select_List">
+        base.USER_ROLE_ID AS userRoleId,
+        user.INFO_ID AS infoId,
+        account.ACCOUNT_ID as accountId,
+        user.NAME AS userName,
+        dept.DEPT_ID AS deptId,
+        dept.DEPT_NAME AS deptName,
+        user.COMPANY_ID AS companyId
+    </sql>
+
+    <sql id="Base_Table_List">
+        biemo_sys_user_role base
+        INNER JOIN biemo_ent_user_account account on account.ACCOUNT_ID  = base.ACCOUNT_ID
+        INNER JOIN biemo_ent_user_info user  on account.INFO_ID = user.INFO_ID
+        INNER JOIN biemo_ent_user_dept_duty user_dept on user_dept.INFO_ID = user.INFO_ID
+        INNER JOIN biemo_ent_dept dept on user_dept.DEPT_ID = dept.DEPT_ID
+    </sql>
+    <!-- 获取角色分配的人员信息列表 -->
+    <select id="selectUserListByRoleId" resultType="map" parameterType="map">
+        SELECT
+        <include refid="Base_Select_List"/>
+        FROM
+        <include refid="Base_Table_List"/>
+        WHERE
+        1 = 1
+        AND base.ROLE_ID = #{roleId}
+        AND account.COMPANY_ID = #{companyId}
+        AND account.STATUS=1
+    </select>
+
+
+    <select id="findRoleIdsByAccountId" resultType="long" parameterType="long">
+        SELECT
+        ROLE_ID
+        FROM
+        biemo_sys_user_role
+        WHERE
+        ACCOUNT_ID = #{accountId}
+    </select>
+
+
+    <select id="userRoles" resultType="com.biemo.cloud.system.modular.sys.entity.SysUserRole">
+    SELECT
+        ur.USER_ROLE_ID AS userRoleId,
+        ur.ACCOUNT_ID AS accountId,
+        ur.ROLE_ID AS roleId
+    FROM
+        biemo_sys_user_role ur
+        LEFT JOIN biemo_sys_role sr ON ur.ROLE_ID = sr.ROLE_ID
+    WHERE
+        sr.STATUS = 1
+	AND ur.ACCOUNT_ID = #{accountId}
+    </select>
+
+</mapper>

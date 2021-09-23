@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.bbs.modular.mapper.BUserMapper">
+
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.BUser" id="BUserResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="email"    column="email"    />
+        <result property="emailVerified"    column="email_verified"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="backgroundImage"    column="background_image"    />
+        <result property="password"    column="password"    />
+        <result property="homePage"    column="home_page"    />
+        <result property="description"    column="description"    />
+        <result property="score"    column="score"    />
+        <result property="status"    column="status"    />
+        <result property="topicCount"    column="topic_count"    />
+        <result property="commentCount"    column="comment_count"    />
+        <result property="roles"    column="roles"    />
+        <result property="type"    column="type"    />
+        <result property="forbiddenEndTime"    column="forbidden_end_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.sys.mapper.SysRolePermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.sys.entity.SysRolePermission">
+        <id column="role_permission_id" property="rolePermissionId" />
+        <result column="role_id" property="roleId" />
+        <result column="permission_id" property="permissionId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        role_permission_id AS "rolePermissionId", role_id AS "roleId", permission_id AS "permissionId"
+    </sql>
+
+    <select id="customList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysRolePermissionResult" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysRolePermissionParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_role_permission where 1 = 1
+    </select>
+
+    <select id="customMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysRolePermissionParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_role_permission where 1 = 1
+    </select>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.sys.model.result.SysRolePermissionResult" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysRolePermissionParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_role_permission where 1 = 1
+    </select>
+
+    <select id="customPageMapList" resultType="map" parameterType="com.biemo.cloud.system.modular.sys.model.params.SysRolePermissionParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_sys_role_permission where 1 = 1
+    </select>
+
+    <insert id="addBatch" parameterType="map">
+        insert into biemo_sys_role_permission(
+        ROLE_ID, PERMISSION_ID
+        )values
+        <foreach item="item" index="key" collection="permissionIds" open="" separator="," close="">
+            (#{roleId}, #{item})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByRoleID" parameterType="map">
+		delete from biemo_sys_role_permission
+		where role_id = #{roleId}
+	</delete>
+
+    <select id="findPermissionByRoleInfo" resultType="java.util.Map">
+        SELECT
+        p.*
+        FROM
+        biemo_sys_role_permission rp
+        LEFT JOIN biemo_sys_permission p ON rp.PERMISSION_ID = p.PERMISSION_ID
+        WHERE 1 = 1
+        <if test="appId != null and appId != ''">
+            AND p.APP_ID = #{appId}
+        </if>
+        <if test="roleIds != null and roleIds.size > 0">
+            AND rp.ROLE_ID IN
+            <foreach collection="roleIds" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        AND p.DEL_FLAG = 'N'
+    </select>
+
+</mapper>

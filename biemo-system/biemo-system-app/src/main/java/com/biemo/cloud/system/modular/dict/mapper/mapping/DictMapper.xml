@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.dict.mapper.DictMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.dict.entity.SysDict">
+        <id column="dict_id" property="dictId" />
+        <result column="dict_type_code" property="dictTypeCode" />
+        <result column="dict_code" property="dictCode" />
+        <result column="dict_name" property="dictName" />
+        <result column="dict_short_name" property="dictShortName" />
+        <result column="dict_short_code" property="dictShortCode" />
+        <result column="parent_id" property="parentId" />
+        <result column="status" property="status" />
+        <result column="order_no" property="orderNo" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        dict_id AS "dictId", dict_type_code AS "dictTypeCode", dict_code AS "dictCode", dict_name AS "dictName", dict_short_name AS "dictShortName", dict_short_code AS "dictShortCode", parent_id AS "parentId", status AS "status", order_no AS "orderNo", create_user AS "createUser", create_time AS "createTime", update_user AS "updateUser", update_time AS "updateTime", del_flag AS "delFlag"
+    </sql>
+
+    <select id="getDictList" resultType="com.biemo.cloud.system.modular.dict.model.DictInfo">
+        SELECT
+        dict.dict_id AS dictId,
+        dict.dict_type_code AS dictTypeCode,
+        type.DICT_TYPE_NAME as dictTypeName,
+        dict.dict_code AS dictCode,
+        dict.dict_name AS dictName,
+        dict.dict_short_name AS dictShortName,
+        dict.dict_short_code AS dictShortCode,
+        dict.parent_id AS parentId,
+        dict.status AS status,
+        dict.order_no AS orderNo,
+        type.APP_CODE as appCode
+        FROM
+        biemo_sys_dict dict
+        INNER JOIN biemo_sys_dict_type type ON dict.dict_type_code = type.dict_type_code
+        WHERE dict.del_flag = 'N'
+        <if test="dictInfo.appCode != null and dictInfo.appCode != ''">
+            AND type.APP_CODE = #{dictInfo.appCode}
+        </if>
+        <if test="dictInfo.dictTypeCode != null and dictInfo.dictTypeCode != ''">
+            AND dict.dict_type_code = #{dictInfo.dictTypeCode}
+        </if>
+        <if test="dictInfo.dictCode != null and dictInfo.dictCode!= ''">
+            AND dict.dict_code LIKE CONCAT('%',#{dictInfo.dictCode},'%')
+        </if>
+        <if test="dictInfo.dictName != null and dictInfo.dictName!= ''">
+            AND dict.dict_name LIKE CONCAT('%',#{dictInfo.dictName},'%')
+        </if>
+        <if test="dictInfo.parentId != null and dictInfo.parentId != ''">
+            AND dict.parent_id = #{dictInfo.parentId}
+        </if>
+        <if test="dictInfo.status != null and dictInfo.status !=''">
+            AND dict.status = #{dictInfo.status}
+        </if>
+        ORDER BY
+        dict.order_no
+    </select>
+
+    <select id="getDictListByTypeCodeAndPid" resultType="com.biemo.cloud.system.modular.dict.model.DictInfo">
+        SELECT
+        dict.dict_id AS dictId,
+        dict.dict_type_code AS dictTypeCode,
+        dict.dict_code AS dictCode,
+        dict.dict_name AS dictName,
+        dict.dict_short_name AS dictShortName,
+        dict.dict_short_code AS dictShortCode,
+        dict.parent_id AS parentId,
+        dict.status AS status
+        FROM biemo_sys_dict dict
+        WHERE dict.dict_type_code = #{dictTypeCode} AND dict.del_flag = 'N'
+        <choose>
+            <when test="parentCode != null and parentCode!=''">
+                and parent_id = #{parentCode}
+            </when>
+            <otherwise>
+                and parent_id = '-1'
+            </otherwise>
+        </choose>
+        ORDER BY
+        order_no
+    </select>
+
+    <!-- 根据字典类型code和非父id获取下级字典 -->
+    <select id="getDictListByTypeCodeAndNotPid" parameterType="map"
+            resultType="com.biemo.cloud.system.modular.dict.model.DictInfo">
+        SELECT
+        dict.dict_id AS dictId,
+        dict.dict_type_code AS dictTypeCode,
+        dict.dict_code AS dictCode,
+        dict.dict_name AS dictName,
+        dict.dict_short_name AS dictShortName,
+        dict.dict_short_code AS dictShortCode,
+        dict.parent_id AS parentId,
+        dict.status AS status
+        FROM biemo_sys_dict dict
+        WHERE dict.dict_type_code = #{dictTypeCode} AND dict.del_flag = 'N'
+        <if test="parentIds != null and parentIds.size > 0">
+            AND parent_id NOT IN
+            <foreach collection="parentIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY
+        order_no
+    </select>
+
+    <select id="getDictName" resultType="java.lang.String">
+        SELECT
+            dict.dict_name AS dictName
+        FROM
+            biemo_sys_dict dict
+        WHERE
+            dict.dict_code = #{dictCode}
+    </select>
+
+    <select id="getDictCode" resultType="java.lang.String">
+        SELECT
+            dict.dict_code AS dictCode
+        FROM
+            biemo_sys_dict dict
+        WHERE
+            dict.dict_type_code = #{dictTypeCode}
+          AND dict.dict_name = #{dictName}
+    </select>
+
+</mapper>

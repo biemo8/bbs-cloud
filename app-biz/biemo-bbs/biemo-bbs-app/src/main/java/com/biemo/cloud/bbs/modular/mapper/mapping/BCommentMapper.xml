@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.bbs.modular.mapper.BCommentMapper">
+
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.BComment" id="BCommentResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="entityType"    column="entity_type"    />
+        <result property="entityId"    column="entity_id"    />
+        <result property="content"    column="content"    />
+        <result property="imageList"    column="image_list"    />
+        <result property="contentType"    column="content_type"    />
+        <result property="quoteId"    column="quote_id"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+</mapper>

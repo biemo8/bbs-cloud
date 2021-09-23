@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.system.modular.ent.mapper.EntDutyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.biemo.cloud.system.modular.ent.entity.EntDuty">
+        <id column="duty_id" property="dutyId"/>
+        <result column="duty_code" property="dutyCode"/>
+        <result column="duty_name" property="dutyName"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="status" property="status"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        duty_id AS "dutyId", duty_name AS "dutyName", duty_code AS dutyCode, status AS "status",order_no AS orderNo,description as description
+    </sql>
+
+    <select id="customPageList" resultType="com.biemo.cloud.system.modular.ent.model.result.EntDutyResult"
+            parameterType="com.biemo.cloud.system.modular.ent.model.params.EntDutyParam">
+        select
+        <include refid="Base_Column_List"/>
+        from biemo_ent_duty
+        <where>
+            <if test="dutyName != null and dutyName != ''">
+                and duty_name like concat('%',#{dutyName},'%')
+            </if>
+            <if test="dutyCode != null and dutyCode != ''">
+                and duty_code = #{dutyCode}
+            </if>
+        </where>
+        order by order_no asc
+    </select>
+
+</mapper>

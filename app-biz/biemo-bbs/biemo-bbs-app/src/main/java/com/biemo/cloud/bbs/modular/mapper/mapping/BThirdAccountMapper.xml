@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biemo.cloud.bbs.modular.mapper.BThirdAccountMapper">
+
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.BThirdAccount" id="BThirdAccountResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="thirdType"    column="third_type"    />
+        <result property="thirdId"    column="third_id"    />
+        <result property="extraData"    column="extra_data"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+</mapper>
