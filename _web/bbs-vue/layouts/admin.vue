@@ -119,7 +119,7 @@ export default {
   },
   head() {
     return {
-      title: 'BBS-GO管理',
+      title: 'BBS管理',
     }
   },
   methods: {

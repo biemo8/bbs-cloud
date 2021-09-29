@@ -1,5 +1,6 @@
 package com.biemo.cloud.bbs.modular.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.biemo.cloud.bbs.api.vo.BTopicVo;
 import com.biemo.cloud.bbs.modular.domain.BTopic;
@@ -19,4 +20,6 @@ public interface IBTopicService extends IService<BTopic>
     ResponseData favorite(Long topicId);
 
     ResponseData create(BTopicVo bTopicvo) throws Exception;
+
+    JSONObject getDetailById(Long topicId, String type);
 }

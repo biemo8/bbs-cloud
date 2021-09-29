@@ -24,9 +24,9 @@
                 <div class="widget-header">推荐文章</div>
                 <div class="widget-content">
                   <ul>
-                    <li v-for="a in recommendArticles" :key="a.articleId">
+                    <li v-for="a in recommendArticles" :key="a.id">
                       <nuxt-link
-                        :to="'/article/' + a.articleId"
+                        :to="'/article/' + a.id"
                         :title="a.title"
                         target="_blank"
                         >{{ a.title }}</nuxt-link
@@ -44,9 +44,9 @@
                 <div class="widget-header">推荐话题</div>
                 <div class="widget-content">
                   <ul>
-                    <li v-for="t in recommendTopics" :key="t.topicId">
+                    <li v-for="t in recommendTopics" :key="t.id">
                       <nuxt-link
-                        :to="'/topic/' + t.topicId"
+                        :to="'/topic/' + t.id"
                         :title="t.title"
                         target="_blank"
                         >{{ t.title }}</nuxt-link

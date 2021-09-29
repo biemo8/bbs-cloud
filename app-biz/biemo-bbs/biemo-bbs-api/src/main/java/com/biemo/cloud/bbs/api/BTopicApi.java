@@ -19,8 +19,14 @@ public interface BTopicApi {
     @GetMapping("/{topicId}")
     ResponseData topicDetail(@PathVariable("topicId") Long topicId);
 
+    @GetMapping("/edit/{topicId}")
+    ResponseData topicEditDetail(@PathVariable("topicId") Long topicId);
+
     @GetMapping("/user/topics")
     ResponseData userTopics(BTopicVo bTopic);
+
+    @GetMapping("/tag/topics")
+    ResponseData tagTopics(@RequestParam("tagId") Long tagId);
 
     @GetMapping("/recentlikes/{topicId}")
     ResponseData recentlikes(@PathVariable Long topicId);
@@ -33,4 +39,8 @@ public interface BTopicApi {
 
     @PostMapping("/create")
     ResponseData create(String captchaId,String captchaCode ,Long type,Long nodeId,String title,String content,String imageList,String tags) throws Exception;
+
+    @PostMapping("/edit/{topicId}")
+    ResponseData editSave(@PathVariable("topicId")Long topicId, Long nodeId,String title,String content,String imageList,String tags) throws Exception;
+
 }

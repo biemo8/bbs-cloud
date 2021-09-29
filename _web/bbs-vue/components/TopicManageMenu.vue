@@ -59,13 +59,13 @@ export default {
   },
   methods: {
     async handleCommand(command) {
-      if (!this.topic || !this.topic.topicId) {
+      if (!this.topic || !this.topic.id) {
         return
       }
       if (command === 'edit') {
-        this.editTopic(this.topic.topicId)
+        this.editTopic(this.topic.id)
       } else if (command === 'delete') {
-        this.deleteTopic(this.topic.topicId)
+        this.deleteTopic(this.topic.id)
       } else if (command === 'recommend') {
         this.switchRecommend(this.topic)
       } else if (command === 'forbidden7Days') {
@@ -116,7 +116,7 @@ export default {
       const action = topic.recommend ? '取消推荐' : '推荐'
       this.$confirm(`是否确认${action}该帖子？`).then(function () {
         me.$axios
-          .post('/api/topic/recommend/' + topic.topicId, {
+          .post('/api/topic/recommend/' + topic.id, {
             recommend: !topic.recommend,
           })
           .then(() => {

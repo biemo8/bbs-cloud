@@ -30,15 +30,16 @@ export default {
           // 如果没配置refUrl，那么取当前地址
           this.refUrlValue = window.location.pathname
         }
-        const ret = await this.$axios.get('/api/qq/login/authorize', {
+        const ret = await this.$axios.get('/api/qq/login', {
           params: {
             ref: this.refUrlValue,
           },
         })
-        window.location = ret.url
+        window.location = ret
       } catch (e) {
         console.error(e)
-        this.$message.error('登录失败：' + (e.message || e))
+        //this.$message.error('登录失败：' + (e.message || e))
+        this.$message.error('对不起，该网站尚未开通QQ帐号登录（错误码：100008）')
       }
     },
   },

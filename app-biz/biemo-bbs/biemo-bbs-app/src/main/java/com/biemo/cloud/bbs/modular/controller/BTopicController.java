@@ -5,31 +5,23 @@ import java.util.stream.Collectors;
 
 import cn.hutool.http.HtmlUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.biemo.cloud.bbs.api.BTopicApi;
 import com.biemo.cloud.bbs.api.vo.BTopicVo;
 import com.biemo.cloud.bbs.modular.annotation.RequestLimit;
 import com.biemo.cloud.bbs.modular.context.BiemoLoginContext;
-import com.biemo.cloud.bbs.modular.domain.BTopicNode;
-import com.biemo.cloud.bbs.modular.domain.BUser;
-import com.biemo.cloud.bbs.modular.domain.BUserLike;
-import com.biemo.cloud.bbs.modular.service.IBTopicNodeService;
-import com.biemo.cloud.bbs.modular.service.IBUserLikeService;
-import com.biemo.cloud.bbs.modular.service.IBUserService;
+import com.biemo.cloud.bbs.modular.domain.*;
+import com.biemo.cloud.bbs.modular.domain.response.BTopicResponse;
+import com.biemo.cloud.bbs.modular.service.*;
 import com.biemo.cloud.bbs.utils.MarkDown2HtmlUtils;
 import com.biemo.cloud.core.page.PageFactory;
 import com.biemo.cloud.core.util.StringUtils;
 import com.biemo.cloud.core.util.uuid.IdUtils;
 import com.biemo.cloud.kernel.model.response.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.biemo.cloud.bbs.modular.domain.BTopic;
-import com.biemo.cloud.bbs.modular.service.IBTopicService;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -50,6 +42,8 @@ public class BTopicController extends BaseController implements BTopicApi
     private IBUserService ibUserService;
     @Autowired
     private IBUserLikeService ibUserLikeService;
+    @Autowired
+    private IBTopicTagService ibTopicTagService;
 
     /**
      * 查询列表
@@ -111,24 +105,13 @@ public class BTopicController extends BaseController implements BTopicApi
     }
 
     @Override
-    public ResponseData topicDetail(@PathVariable("topicId") Long topicId){
-        BTopic bTopic = ibTopicService.getById(topicId);
-        bTopic.setViewCount(bTopic.getViewCount()+1);
-        ibTopicService.updateById(bTopic);
-        BTopicNode node = ibTopicNodeService.getById(bTopic.getNodeId());
-        if(bTopic.getType()==0){
-            bTopic.setContent(MarkDown2HtmlUtils.markdownToHtml(bTopic.getContent()));
-        }
-        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(bTopic);
-        jsonObject.put("node",node);
-        if(bTopic.getImageList()!=null){
-            jsonObject.put("imageList",JSONObject.parseArray(bTopic.getImageList()));
-        }
-        BUser user = ibUserService.getById(bTopic.getUserId());
-        jsonObject.put("user",user);
+    public ResponseData topicDetail(Long topicId){
+        return ResponseData.success(ibTopicService.getDetailById(topicId,null));
+    }
 
-        return ResponseData.success(jsonObject);
-
+    @Override
+    public ResponseData topicEditDetail(Long topicId) {
+        return ResponseData.success(ibTopicService.getDetailById(topicId,"edit"));
     }
 
     @Override
@@ -171,17 +154,57 @@ public class BTopicController extends BaseController implements BTopicApi
         return ResponseData.success(result);
     }
 
+    @Override
+    public ResponseData tagTopics(Long tagId) {
+        BUser bUser = BiemoLoginContext.me().getCurrentUser();
+        JSONObject result = new JSONObject();
+        Page<BTopicResponse> page = ibTopicTagService.customPageList(PageFactory.defaultPage(),tagId);
+        List<BTopicResponse> topicResponses = page.getRecords();
+        List<JSONObject> jsonObjectList = new ArrayList<>();
+        if(topicResponses!=null&&topicResponses.size()>0){
+            topicResponses.forEach(topic->{
+                JSONObject jsonObject = (JSONObject) JSONObject.toJSON(topic);
+                if(topic.getImageList()!=null){
+                    jsonObject.put("imageList",JSONObject.parseArray(topic.getImageList()));
+                }
+                if(!StringUtils.isEmpty(topic.getContent())){
+                    String content = MarkDown2HtmlUtils.markdownToHtml(topic.getContent());
+                    content = HtmlUtil.cleanHtmlTag(content);
+                    content = content.length()>=100?content.substring(100):content;
+                    jsonObject.put("summary", content);
+                }
+                if(bUser!=null){
+                    BUserLike bUserLike = new BUserLike();
+                    bUserLike.setUserId(bUser.getId());
+                    bUserLike.setEntityType("topic");
+                    bUserLike.setEntityId(topic.getId());
+                    BUserLike bUserLikeNew = ibUserLikeService.getOne(new QueryWrapper<>(bUserLike));
+                    if(bUserLikeNew!=null){
+                        jsonObject.put("liked",true);
+                    }
+                }
+                jsonObjectList.add(jsonObject);
+            });
+        }
+        boolean hasMore = page.getCurrent()<page.getPages()?true:false;
+        result.put("hasMore",hasMore);
+        result.put("pageNo",hasMore?page.getCurrent()+1:page.getCurrent());
+        result.put("results",jsonObjectList);
+        return ResponseData.success(result);
+    }
+
     //最近喜欢的
     @Override
     public ResponseData recentlikes(@PathVariable Long topicId){
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("entity_id",topicId);
+        queryWrapper.orderByDesc("create_time");
         queryWrapper.last("limit 10");
         List<BUserLike> bUserLikes = ibUserLikeService.list(queryWrapper);
         if(bUserLikes!=null&&bUserLikes.size()>0){
             List<Long> userIds = bUserLikes.stream().map(x->x.getUserId()).collect(Collectors.toList());
             List<BUser> users = ibUserService.listByIds(userIds);
-            ResponseData.success(users);
+            return ResponseData.success(users);
         }
         return ResponseData.success();
     }
@@ -211,6 +234,19 @@ public class BTopicController extends BaseController implements BTopicApi
         bTopicVo.setContent(content);
         bTopicVo.setImageList(imageList);
         bTopicVo.setTags(tags);
+        return ibTopicService.create(bTopicVo);
+    }
+
+
+    @Override
+    public ResponseData editSave(Long topicId,Long nodeId, String title, String content, String imageList, String tags) throws Exception {
+        BTopicVo bTopicVo = new BTopicVo();
+        bTopicVo.setNodeId(nodeId);
+        bTopicVo.setTitle(title);
+        bTopicVo.setContent(content);
+        bTopicVo.setImageList(imageList);
+        bTopicVo.setTags(tags);
+        bTopicVo.setId(topicId);
         return ibTopicService.create(bTopicVo);
     }
 

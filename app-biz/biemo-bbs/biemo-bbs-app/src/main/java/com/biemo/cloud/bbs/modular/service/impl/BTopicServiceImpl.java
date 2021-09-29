@@ -1,7 +1,10 @@
 package com.biemo.cloud.bbs.modular.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -10,6 +13,7 @@ import com.biemo.cloud.bbs.api.vo.BTopicVo;
 import com.biemo.cloud.bbs.modular.context.BiemoLoginContext;
 import com.biemo.cloud.bbs.modular.domain.*;
 import com.biemo.cloud.bbs.modular.mapper.*;
+import com.biemo.cloud.bbs.utils.MarkDown2HtmlUtils;
 import com.biemo.cloud.core.constant.Constants;
 import com.biemo.cloud.core.util.StringUtils;
 import com.biemo.cloud.core.util.redis.RedisCache;
@@ -47,6 +51,15 @@ public class BTopicServiceImpl extends ServiceImpl<BTopicMapper, BTopic> impleme
 
     @Autowired
     BMessageMapper messageMapper;
+
+    @Autowired
+    BTopicMapper topicMapper;
+
+    @Autowired
+    BTopicNodeMapper topicNodeMapper;
+
+    @Autowired
+    BUserMapper userMapper;
 
     @Override
     @Transactional
@@ -126,7 +139,6 @@ public class BTopicServiceImpl extends ServiceImpl<BTopicMapper, BTopic> impleme
         if(bUser==null){
             return ResponseData.error("未登录！");
         }
-        bTopicvo.setId(IdUtils.fastUUIDLong());
         //验证码验证
         String captchaId = bTopicvo.getCaptchaId();
         String captchaCode = bTopicvo.getCaptchaCode();
@@ -135,6 +147,18 @@ public class BTopicServiceImpl extends ServiceImpl<BTopicMapper, BTopic> impleme
             if(code==null||!code.equals(captchaCode)){
                 return ResponseData.error("验证码错误！");
             }
+        }
+        //插入topic
+        bTopicvo.setUserId(bUser.getId());
+        bTopicvo.setCreateTime(System.currentTimeMillis());
+        BTopic bTopic = new BTopic();
+        BeanUtils.copyProperties(bTopic,bTopicvo);
+        if(bTopic!=null&&bTopic.getId()!=null&&bTopic.getId()!=0){
+            this.baseMapper.updateById(bTopic);
+        }else if(bTopic!=null&&(bTopic.getId()==null||bTopic.getId()==0)){
+            bTopic.setId(IdUtils.fastUUIDLong());
+            bTopicvo.setId(bTopic.getId());
+            this.baseMapper.insert(bTopic);
         }
         //处理标签
         if(StringUtils.isNotEmpty(bTopicvo.getTags())){
@@ -164,14 +188,39 @@ public class BTopicServiceImpl extends ServiceImpl<BTopicMapper, BTopic> impleme
                 bTopicTagMapper.insert(topicTag);
             }
         }
-        //插入topic
-        bTopicvo.setUserId(bUser.getId());
-        bTopicvo.setCreateTime(System.currentTimeMillis());
-        BTopic bTopic = new BTopic();
-        BeanUtils.copyProperties(bTopic,bTopicvo);
-        if(bTopic!=null){
-            this.baseMapper.insert(bTopic);
-        }
         return ResponseData.success(bTopic);
+    }
+
+    @Override
+    public JSONObject getDetailById(Long topicId, String type) {
+        BTopic bTopic = topicMapper.selectById(topicId);
+        bTopic.setViewCount(bTopic.getViewCount()+1);
+        topicMapper.updateById(bTopic);
+        BTopicNode node = topicNodeMapper.selectById(bTopic.getNodeId());
+        if(!"edit".equals(type)&&bTopic.getType()==0){
+            bTopic.setContent(MarkDown2HtmlUtils.markdownToHtml(bTopic.getContent()));
+        }
+        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(bTopic);
+        jsonObject.put("node",node);
+        if(bTopic.getImageList()!=null){
+            jsonObject.put("imageList",JSONObject.parseArray(bTopic.getImageList()));
+        }
+        BUser user = userMapper.selectById(bTopic.getUserId());
+        jsonObject.put("user",user);
+        List<BTag> tagList = new ArrayList<>();
+        BTopicTag bTopicTag = new BTopicTag();
+        bTopicTag.setTopicId(topicId);
+        List<BTopicTag> bTopicTagList = bTopicTagMapper.selectList(new QueryWrapper<>(bTopicTag));
+        List<Long> tagIds = bTopicTagList!=null&&bTopicTagList.size()>0?bTopicTagList.stream().map(x->x.getTagId()).collect(Collectors.toList()) : null;
+        if(tagIds!=null&&tagIds.size()>0){
+            tagList = bTagMapper.selectBatchIds(tagIds);
+            if("edit".equals(type)){
+                List<String> tags= tagList.stream().map(t->t.getName()).collect(Collectors.toList());
+                jsonObject.put("tags",tags);
+            }else{
+                jsonObject.put("tags",tagList);
+            }
+        }
+        return jsonObject;
     }
 }

@@ -8,9 +8,9 @@
       </div>
       <div>
         © 2021 Powered by
-        <a href="https://cloud.biemo.com" target="_blank" class="light"
-          >biemo-cloud</a
-        >
+        <a href="https://cloud.biemo.com" target="_blank" class="light">biemo-cloud</a> <br>
+        <p>发表言论时，遵守当地法律法规。本站部分图片、文章来源于网络，版权归原作者所有，如有侵权，请与我联系删除。</p>
+        <a target="_blank" href="http://www.miitbeian.gov.cn">湘ICP备14016160号-1</a>
       </div>
     </div>
   </footer>

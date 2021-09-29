@@ -8,10 +8,10 @@
           <div class="control">
             <div
               v-for="node in nodes"
-              :key="node.nodeId"
+              :key="node.id"
               class="tag"
-              :class="{ selected: postForm.nodeId === node.nodeId }"
-              @click="postForm.nodeId = node.nodeId"
+              :class="{ selected: postForm.nodeId === node.id }"
+              @click="postForm.nodeId = node.id"
             >
               <span>{{ node.name }}</span>
             </div>
@@ -112,7 +112,7 @@ export default {
 
       try {
         const topic = await this.$axios.post(
-          '/api/topic/edit/' + this.topic.topicId,
+          '/api/topic/edit/' + this.topic.id,
           {
             nodeId: this.postForm.nodeId,
             title: this.postForm.title,
@@ -123,7 +123,7 @@ export default {
         this.$msg({
           message: '修改成功',
           onClose() {
-            me.$linkTo('/topic/' + topic.topicId)
+            me.$linkTo('/topic/' + topic.id)
           },
         })
       } catch (e) {

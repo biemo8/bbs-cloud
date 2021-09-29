@@ -15,7 +15,7 @@
           :class="{ active: isShowNodes }"
           @click="switchNodes"
         >
-          话题
+          分类
           <i v-if="isShowNodes" class="iconfont icon-drop-up" />
           <i v-else class="iconfont icon-drop-down" />
         </div>

@@ -11,6 +11,68 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="lastCommentTime"    column="last_comment_time"    />
         <result property="lastCommentUserId"    column="last_comment_user_id"    />
-        <result property="createTime"    column="create_time"    />
+        <result property="createTime"    column="create_time" />
     </resultMap>
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.response.BTopicResponse" id="BTopicResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="nodeId"    column="node_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="imageList"    column="image_list"    />
+        <result property="recommend"    column="recommend"    />
+        <result property="recommendTime"    column="recommend_time"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="commentCount"    column="comment_count"    />
+        <result property="likeCount"    column="like_count"    />
+        <result property="status"    column="status"    />
+        <result property="lastCommentTime"    column="last_comment_time"    />
+        <result property="lastCommentUserId"    column="last_comment_user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="extraData"    column="extra_data"    />
+        <association property="user" resultMap="BUserResult"></association>
+        <association property="node" resultMap="BTopicNodeResult"></association>
+        <collection property="tags" javaType="java.util.List" resultMap="BTagResult"></collection>
+    </resultMap>
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.BUser" id="BUserResult">
+        <result property="id"    column="acu_userId"    />
+        <result property="username"    column="acu_username"    />
+        <result property="nickname"    column="acu_nickname"    />
+        <result property="avatar"    column="acu_avatar"    />
+
+    </resultMap>
+
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.BTopicNode" id="BTopicNodeResult">
+        <result property="id"    column="acn_node_id"    />
+        <result property="name"    column="acn_name"    />
+    </resultMap>
+
+    <resultMap type="com.biemo.cloud.bbs.modular.domain.BTag" id="BTagResult">
+        <result property="id"    column="actag_id"    />
+        <result property="name"    column="actag_name"    />
+    </resultMap>
+
+
+    <select id="customPageList" resultMap="BTopicResult" parameterType="java.lang.Long">
+                SELECT
+                    t.*,
+                    u.id as acu_userId,
+                    u.username as acu_username,
+                    u.nickname as acu_nickname,
+                    u.avatar as acu_avatar,
+                    n.id as acn_node_id,
+                    n.name as acn_name,
+                    tag.id as actag_id,
+                    tag.name as actag_name
+                FROM
+                    b_topic t
+                LEFT JOIN b_topic_tag tt ON t.id = tt.topic_id
+                LEFT JOIN b_user u ON u.id = t.user_id
+                LEFT JOIN b_topic_node n ON n.id = t.node_id
+                LEFT JOIN b_tag tag on  tag.id = tt.tag_id
+                WHERE
+                    tt.tag_id = #{tagId} order by tt.create_time desc
+
+    </select>
 </mapper>
