@@ -7,6 +7,7 @@ import com.biemo.cloud.bbs.api.vo.BArticleVo;
 import com.biemo.cloud.bbs.modular.context.BiemoLoginContext;
 import com.biemo.cloud.bbs.modular.domain.*;
 import com.biemo.cloud.bbs.modular.mapper.*;
+import com.biemo.cloud.bbs.utils.MarkDown2HtmlUtils;
 import com.biemo.cloud.core.constant.Constants;
 import com.biemo.cloud.core.util.StringUtils;
 import com.biemo.cloud.core.util.redis.RedisCache;
@@ -124,6 +125,9 @@ public class BArticleServiceImpl extends ServiceImpl<BArticleMapper,BArticle> im
         if(article==null){
             article = new BArticle();
             return  (JSONObject) JSONObject.toJSON(article);
+        }
+        if(StringUtils.isNotBlank(article.getContent())){
+            article.setContent(MarkDown2HtmlUtils.markdownToHtml(article.getContent()));
         }
         JSONObject jsonObject = (JSONObject) JSONObject.toJSON(article);
         BUser bUser = bUserMapper.selectById(article.getUserId());
