@@ -1,6 +1,6 @@
 # 介绍
 
-该项目使用nuxt.js进行构建，利用服务端渲染技术构建 https://mlog.club 前端界面。接口由 mlog-club ( https://github.com/mlogclub/mlog ) 提供。
+该项目使用nuxt.js进行构建，利用服务端渲染技术构建 https://www.makesoft.cn 前端界面。接口由 bbs-cloud ( https://github.com/biemo8/bbs-cloud ) 提供。
 
 ## Build Setup
 

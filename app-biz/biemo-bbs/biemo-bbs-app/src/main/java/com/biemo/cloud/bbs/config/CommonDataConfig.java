@@ -2,15 +2,18 @@ package com.biemo.cloud.bbs.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 @Configuration
+@DependsOn("springContextHolder")
 public class CommonDataConfig {
 
-    //es 新闻文章索引名称
-    //@Value("${spring.elasticsearch.indexName.topicIndexName}")
+    //es 帖子索引名称
+    @Value("${spring.elasticsearch.indexName.topicIndexName}")
     private String topicIndexName;
 
-    //@Value("${spring.elasticsearch.indexName.articleIndexName}")
+    //es 文章索引名称
+    @Value("${spring.elasticsearch.indexName.articleIndexName}")
     private String articleIndexName;
 
     public CommonDataConfig() {

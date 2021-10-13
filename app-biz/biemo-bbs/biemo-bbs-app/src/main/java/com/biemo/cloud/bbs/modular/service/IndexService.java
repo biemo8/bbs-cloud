@@ -2,6 +2,8 @@ package com.biemo.cloud.bbs.modular.service;
 
 import org.springframework.context.ApplicationEvent;
 
+import java.io.IOException;
+
 /**
  * ES索引的 创建、构建、保存和删除操作
  * @param <T>
@@ -24,13 +26,13 @@ public interface IndexService<T> extends SearcherService {
     /**
      * 构建索引
      */
-    void buildIndex();
+    void buildIndex() throws IOException;
 
     /**
      * 保存索引 事件驱动  异步操作
      * @param event 索引保存事件
      */
-    void saveIndex(ApplicationEvent event);
+    void saveIndex(ApplicationEvent event) throws IOException;
 
     /**
      * 删除索引 事件驱动  异步操作

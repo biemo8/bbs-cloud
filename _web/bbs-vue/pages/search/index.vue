@@ -35,10 +35,10 @@
             :key="doc.id"
             class="topic-search-item"
           >
-            <a target="_blank" :href="'/topic/' + doc.topicId">
-              <h1 class="topic-search-item-title" v-html="doc.title"></h1>
+            <a target="_blank" :href="'/topic/' + doc.id">
+              <h1 class="topic-search-item-title" v-html="doc.title!=null?doc.title:doc.content.substring(0,10)"></h1>
             </a>
-            <p class="topic-search-item-summary" v-html="doc.summary"></p>
+            <p class="topic-search-item-summary" v-if="doc.content&&doc.content.length>0" v-html="doc.content.length>100?doc.content.substring(0,100):doc.content"></p>
             <span class="topic-search-item-time">{{
               doc.createTime | formatDate
             }}</span>
@@ -68,7 +68,7 @@ export default {
       const keyword = query.q || ''
       const page = query.p || 1
       const [docsPage] = await Promise.all([
-        $axios.get('/api/search/topic', {
+        $axios.get('/api/index/search', {
           params: {
             keyword,
             page,

@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.biemo.cloud.bbs.api.vo.BTopicVo;
 import com.biemo.cloud.bbs.modular.context.BiemoLoginContext;
 import com.biemo.cloud.bbs.modular.domain.*;
+import com.biemo.cloud.bbs.modular.domain.event.TopicSaveEvent;
 import com.biemo.cloud.bbs.modular.mapper.*;
 import com.biemo.cloud.bbs.utils.MarkDown2HtmlUtils;
 import com.biemo.cloud.core.constant.Constants;
@@ -21,6 +22,7 @@ import com.biemo.cloud.core.util.uuid.IdUtils;
 import com.biemo.cloud.kernel.model.response.ResponseData;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import com.biemo.cloud.bbs.modular.service.IBTopicService;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +62,9 @@ public class BTopicServiceImpl extends ServiceImpl<BTopicMapper, BTopic> impleme
 
     @Autowired
     BUserMapper userMapper;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     @Transactional
@@ -160,6 +165,7 @@ public class BTopicServiceImpl extends ServiceImpl<BTopicMapper, BTopic> impleme
             bTopicvo.setId(bTopic.getId());
             this.baseMapper.insert(bTopic);
         }
+        applicationContext.publishEvent(new TopicSaveEvent(this,bTopic));
         //处理标签
         if(StringUtils.isNotEmpty(bTopicvo.getTags())){
             String tags = bTopicvo.getTags();

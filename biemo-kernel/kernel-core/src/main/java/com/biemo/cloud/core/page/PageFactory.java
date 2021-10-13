@@ -60,7 +60,7 @@ public class PageFactory {
      */
     public static final String ORDER_BY_PARAM_NAME = "orderBy";
 
-    public static final Integer PAGE_SIZE = 20;
+    public static final Integer PAGE_SIZE = 2000;
 
     /**
      * 默认规则的分页

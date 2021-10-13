@@ -1,15 +1,24 @@
 package com.biemo.cloud.bbs.modular.domain;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.biemo.cloud.bbs.core.search.IndexSerializable;
+import com.biemo.cloud.core.constant.Constants;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.biemo.cloud.bbs.modular.annotation.Excel;
+import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
+import java.util.Set;
 
 
 /**
@@ -19,7 +28,7 @@ import java.util.Date;
  * @date 2021-08-11
  */
 @TableName("b_topic")
-public class BTopic implements Serializable
+public class BTopic extends BaseEntity implements IndexSerializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -248,5 +257,37 @@ public class BTopic implements Serializable
             .append("createTime", getCreateTime())
             .append("extraData", getExtraData())
             .toString();
+    }
+
+    @Override
+    public String toElasticsearchId() {
+        return Objects.nonNull(id)?id.toString():null;
+    }
+
+    public BTopic toElasticsearchObject(){
+        BTopic topic = new BTopic();
+        topic.setId(id);
+        topic.setTitle(title);
+        topic.setContent(content);
+        return topic;
+    }
+
+    @Override
+    public String toElasticsearchJson(Logger logger, ObjectMapper objectMapper) {
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        try {
+            return objectMapper.writeValueAsString(this.toElasticsearchObject());
+        } catch (Exception e) {
+            logger.error("对象转换JSON错误，错误如下：{}", e.getMessage());
+        }
+        return Constants.EMPTY;
+    }
+
+    /** 标红 */
+    public void highlighterText(Set<String> exps){
+        exps.forEach(exp -> {
+            title = title == null ? null : title.replaceAll(exp, "<b style='color:red'>"+ exp +"</b>");
+            content = content == null ? null : content.replaceAll(exp, "<b style='color:red'>"+ exp +"</b>");
+        });
     }
 }

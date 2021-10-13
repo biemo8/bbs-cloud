@@ -29,43 +29,16 @@ public class TopicIndexQueryContext extends AbstractIndexQueryContext {
     @ESMapping(type= IdsQueryBuilder.NAME)
     private List<Long> ids;
 
-    /** 类别 */
-    @ESMapping
-    private Integer type;
-
-    @ESMapping(type= TermsQueryBuilder.NAME,queryField = "type")
-    private List<Integer> types;
-
     /** 主题名称 */
-    @ESMapping
+    @ESMapping( type= MatchPhraseQueryBuilder.NAME, queryField = "title",boolLogic = ESBoolLogicConstants.SHOULD)
     private String title;
 
-    @ESMapping(type= TermsQueryBuilder.NAME,queryField = "title")
-    private List<String> titles;
-
-    /** 标题查询  */
-    @ESMapping(type = MatchPhraseQueryBuilder.NAME, queryField = "titleAnalyzer")
-    private String titleAnalyzer;
+//    @ESMapping(type= TermsQueryBuilder.NAME,queryField = "title")
+//    private List<String> titles;
 
     /** 内容查询 */
-    @ESMapping(type = MatchPhraseQueryBuilder.NAME,queryField = "contentAnalyzer")
+    @ESMapping(type = MatchPhraseQueryBuilder.NAME,queryField = "content",boolLogic = ESBoolLogicConstants.SHOULD )
     private String content;
-
-    /** 标题匹配条件 */
-    @ESMapping(type = QueryStringQueryBuilder.NAME,queryField = "titleAnalyzer",hierarchy = ESHierarchyConstants.SECOND, boost = 1000.0f)
-    private String topicTitleKeyword;
-
-    /** 标题过滤条件 */
-    @ESMapping(type = QueryStringQueryBuilder.NAME,queryField = "titleAnalyzer",boolLogic = ESBoolLogicConstants.MUST_NOT)
-    private String topicTitleFilterKeyword;
-
-    /** 内容匹配条件 */
-    @ESMapping(type = QueryStringQueryBuilder.NAME,queryField = "contentAnalyzer",hierarchy = ESHierarchyConstants.SECOND, boost = 1.0f)
-    private String topicContentKeyword;
-
-    /** 内容过滤条件 */
-    @ESMapping(type = QueryStringQueryBuilder.NAME,queryField = "contentAnalyzer",boolLogic = ESBoolLogicConstants.MUST_NOT)
-    private String topicContentFilterKeyword;
 
     /** 文章创建时间 */
     @ESMapping(type = RangeQueryBuilder.NAME,format = "yyyy-MM-dd",queryField = "createTime",compareWay = ESCompareWayConstants.GTE)
@@ -75,4 +48,58 @@ public class TopicIndexQueryContext extends AbstractIndexQueryContext {
 
     private String sort;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Long> ids) {
+        this.ids = ids;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
 }

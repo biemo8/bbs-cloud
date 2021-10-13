@@ -3,6 +3,7 @@ package com.biemo.cloud.bbs.core.constant;
 
 import com.biemo.cloud.bbs.config.CommonDataConfig;
 import com.biemo.cloud.core.util.SpringContextHolder;
+import org.springframework.context.annotation.DependsOn;
 
 /**
  * @Program: makesoft

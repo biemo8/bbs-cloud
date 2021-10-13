@@ -5,7 +5,6 @@ import java.util.Map;
 
 /**
  * 数据专题配置表文档类别和匹配类别
- * @date 2021-03-25 15:44
  */
 public class CatalogConstants {
     /** 新闻 */
