@@ -3,8 +3,6 @@
 #### 介绍
 springboot-2.2.5+mybatis-plus-3.4+springcloud-Hoxton.SR3  开发者论坛社区系统
 
-[演示地址](http://www.makesoft.cn)http://www.makesoft.cn 
-
 前端基本完成。后端功能开发中。。。。
 
 Biemo-cloud 3.0 开发中... 
